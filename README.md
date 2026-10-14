@@ -9,6 +9,11 @@
   <img src="preview.png" alt="Vista previa de MODR APP" width="100%">
 </p>
 
+<p align="center">
+  <a href="https://rod-dev2026.github.io/Modelos-de-Optimizaci-n-de-Recursos/"><b>🌐 Ejecutar aplicación en línea</b></a> 
+  &nbsp;|&nbsp; 
+  <a href="https://raw.githubusercontent.com/rod-dev2026/Modelos-de-Optimizaci-n-de-Recursos/main/index.html" download="MODR_APP.html"><b>📥 Descargar aplicación (Archivo HTML)</b></a>
+</p>
 
 ## 🚀 Descripción de la Aplicación
 
