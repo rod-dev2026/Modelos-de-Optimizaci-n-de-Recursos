@@ -75,4 +75,4 @@ No se requiere ningún entorno de compilación complejo ni instalación de libre
 
 1. Clona el repositorio o descarga el archivo fuente:
    ```bash
-   git clone [https://github.com/tu-usuario/nombre-del-repositorio.git](https://github.com/tu-usuario/nombre-del-repositorio.git)
+ git clone https://github.com/rod-dev2026/Modelos-de-Optimizaci-n-de-Recursos.git
