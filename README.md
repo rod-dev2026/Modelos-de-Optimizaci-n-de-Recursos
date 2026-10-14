@@ -8,14 +8,6 @@
 <p align="center">
   <img src="preview.png" alt="Vista previa de MODR APP" width="100%">
 </p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Versión-4.0.0-blue.svg" alt="Versión">
-  <img src="https://img.shields.io/badge/Asignatura-ICC--1028-orange.svg" alt="ICC-1028">
-  <img src="https://img.shields.io/badge/Institución-TecNM%20ITTUX-green.svg" alt="TecNM ITTUX">
-  <img src="https://img.shields.io/badge/Licencia-MIT-purple.svg" alt="Licencia">
-</p>
-
 ---
 
 ## 🚀 Descripción de la Aplicación
