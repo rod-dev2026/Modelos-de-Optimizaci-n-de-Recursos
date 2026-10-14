@@ -6,7 +6,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/preview.png" alt="Vista previa de MODR APP" width="100%">
+  <img src="preview.png" alt="Vista previa de MODR APP" width="100%">
 </p>
 
 <p align="center">
