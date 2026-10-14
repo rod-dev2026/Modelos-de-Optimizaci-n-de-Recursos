@@ -8,7 +8,7 @@
 <p align="center">
   <img src="preview.png" alt="Vista previa de MODR APP" width="100%">
 </p>
----
+
 
 ## 🚀 Descripción de la Aplicación
 
