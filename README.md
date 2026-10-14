@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://rod-dev2026.github.io/Modelos-de-Optimizaci-n-de-Recursos/"><b>🌐 Ejecutar aplicación en línea</b></a> 
   &nbsp;|&nbsp; 
-  <a href="https://raw.githubusercontent.com/rod-dev2026/Modelos-de-Optimizaci-n-de-Recursos/main/index.html" download="MODR_APP.html"><b>📥 Descargar aplicación (Archivo HTML)</b></a>
+  <a href="https://github.com/rod-dev2026/Modelos-de-Optimizaci%C3%B-n-de-Recursos/raw/main/index.html"><b>📥 Descargar código fuente (HTML)</b></a>
 </p>
 
 ## 🚀 Descripción de la Aplicación
