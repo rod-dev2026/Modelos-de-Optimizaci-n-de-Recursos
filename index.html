@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1e40af">
+<title>Modelos de Optimización de Recursos — ICC-1028</title>
+<style>
+:root{
+  --bg:#eaf1ff;--card:#ffffff;--text:#0c2145;--muted:#5a6e93;--primary:#1d4ed8;--primary-2:#2563eb;--accent:#0ea5e9;
+  --border:#d3def5;--grid:#e3ebf9;--axis:#9fb1d4;--soft:#eef4ff;--hl:#fff3c4;--good:#0a8a3a;--bad:#c62828;--warn:#b45309;
+  --side1:#0b2a72;--side2:#1e40af;--sidetext:#e8f0ff;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#008300;--s7:#6250d6;--s8:#e34948;
+  --shadow:0 2px 10px rgba(15,50,130,.10);
+}
+:root[data-theme="dark"]{
+  --bg:#08112b;--card:#0f1b42;--text:#e6eeff;--muted:#93a8d6;--primary:#5aa2ff;--primary-2:#3b82f6;--accent:#38bdf8;
+  --border:#1f3169;--grid:#1a2a58;--axis:#3b4f8a;--soft:#13224f;--hl:#3b3a12;--good:#34d27b;--bad:#ff7b7b;--warn:#fbbf24;
+  --side1:#050d26;--side2:#0b1a4d;--sidetext:#dbe7ff;
+  --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#2fae2f;--s7:#9085e9;--s8:#e66767;
+  --shadow:0 2px 12px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+html{font-size:15px}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:1rem;line-height:1.5;overscroll-behavior-y:none}
+header{position:sticky;top:0;z-index:30;min-height:60px;display:flex;align-items:center;gap:10px;padding:8px 12px;background:linear-gradient(90deg,var(--side1),var(--side2));color:#fff;box-shadow:0 2px 12px rgba(0,0,0,.25);flex-wrap:wrap}
+header h1{font-size:0.95rem;margin:0;font-weight:650;letter-spacing:.2px;line-height:1.2}
+header .inst{font-size:0.68rem;opacity:.9;font-weight:600;letter-spacing:.4px;display:block}
+header small{opacity:.8;display:block;font-size:0.7rem;font-weight:400;margin-top:2px}
+.hinfo{flex:1;min-width:0}
+.logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#60a5fa,#22d3ee);display:grid;place-items:center;font-weight:800;color:#06224f;flex:none;font-size:1rem}
+.spacer{flex:1}
+.iconbtn{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);color:#fff;border-radius:10px;padding:8px 10px;cursor:pointer;font-size:0.8rem;display:flex;gap:6px;align-items:center;min-height:38px}
+.iconbtn:hover{background:rgba(255,255,255,.25)}
+.iconbtn span{display:inline}
+#burger{display:none;padding:8px 12px}
+.layout{display:flex;min-height:calc(100% - 60px)}
+nav#side{width:282px;flex:none;background:linear-gradient(180deg,var(--side2),var(--side1));color:var(--sidetext);padding:14px 10px;position:sticky;top:0;height:100vh;overflow:auto;transition:transform .25s ease}
+nav#side .u{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;background:transparent;border:0;color:inherit;padding:10px 12px;border-radius:12px;cursor:pointer;font:inherit;margin-bottom:4px;min-height:44px}
+nav#side .u:hover{background:rgba(255,255,255,.1)}
+nav#side .u.on{background:rgba(255,255,255,.2);box-shadow:inset 3px 0 0 #7dd3fc}
+nav#side .num{flex:none;width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.18);display:grid;place-items:center;font-weight:700;font-size:0.85rem}
+nav#side .u.on .num{background:#7dd3fc;color:#06224f}
+nav#side .t{font-size:0.87rem;line-height:1.3}
+nav#side .footer{padding:12px;border-top:1px solid rgba(255,255,255,.15);margin-top:10px;font-size:0.7rem;text-align:center;opacity:.85}
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:35}
+#overlay.on{display:block}
+main{flex:1;min-width:0;padding:18px 20px 60px;max-width:1400px;width:100%}
+.unithead{margin-bottom:14px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.unithead h2{margin:0;font-size:1.45rem;color:var(--primary);line-height:1.25}
+.unithead p{margin:4px 0 0;color:var(--muted);font-size:0.9rem}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px;border-bottom:2px solid var(--border);margin-bottom:16px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.tab{flex:none;background:var(--card);border:1px solid var(--border);color:var(--text);padding:9px 14px;border-radius:999px;cursor:pointer;font:inherit;font-size:0.85rem;white-space:nowrap;min-height:38px}
+.tab:hover{border-color:var(--primary-2)}
+.tab.on{background:var(--primary-2);border-color:var(--primary-2);color:#fff;font-weight:600}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card h3{margin:0 0 8px;font-size:1.05rem;color:var(--primary)}
+.card h4{margin:12px 0 6px;font-size:0.95rem}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0}
+.row label{font-size:0.85rem;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+input,select,textarea{font:inherit;background:var(--soft);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:7px 9px;min-width:0;max-width:100%}
+input[type=number]{width:82px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--primary-2);outline-offset:0}
+textarea{width:100%;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:0.82rem}
+.btn{background:linear-gradient(180deg,var(--primary-2),var(--primary));color:#fff;border:0;border-radius:10px;padding:10px 16px;font:inherit;font-weight:600;cursor:pointer;box-shadow:0 2px 6px rgba(29,78,216,.35);min-height:40px;font-size:0.88rem}
+:root[data-theme="dark"] .btn{color:#06122e}
+.btn:hover{filter:brightness(1.1)}
+.btn.sec{background:var(--soft);color:var(--primary);border:1px solid var(--border);box-shadow:none}
+.btn.sm{padding:6px 10px;font-size:0.78rem;min-height:32px}
+.btn.print{background:linear-gradient(180deg,#1baf7a,#0a8a3a)}
+.btn.print:hover{filter:brightness(1.08)}
+table.t{border-collapse:collapse;font-size:0.82rem;margin:6px 0;max-width:100%}
+.tw{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+table.t th,table.t td{border:1px solid var(--border);padding:6px 8px;text-align:center;white-space:nowrap}
+table.t th{background:var(--soft);color:var(--primary);font-weight:600}
+table.t td.l,table.t th.l{text-align:left}
+table.t td.hl{background:var(--hl);font-weight:700}
+table.t td.piv{background:var(--primary-2);color:#fff;font-weight:700}
+table.t tr.tot td{font-weight:700;background:var(--soft)}
+table.t input{width:68px;text-align:center;padding:5px}
+table.t input.w{width:120px;text-align:left}
+table.t input.nm{width:48px}
+table.t td.crit{background:rgba(227,73,72,.18);font-weight:700}
+.kpis{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0}
+.kpi{background:var(--soft);border:1px solid var(--border);border-radius:12px;padding:10px 14px;min-width:120px;flex:1 1 140px}
+.kpi b{display:block;font-size:1.3rem;color:var(--primary);word-break:break-word}
+.kpi span{font-size:0.75rem;color:var(--muted)}
+.note{border-left:4px solid var(--primary-2);background:var(--soft);padding:10px 14px;border-radius:8px;margin:10px 0;font-size:0.9rem}
+.note.ok{border-color:var(--good)}.note.warn{border-color:var(--warn)}.note.err{border-color:var(--bad)}
+.badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:0.72rem;font-weight:600;background:var(--soft);color:var(--primary);border:1px solid var(--border)}
+.badge.ok{color:var(--good)}.badge.bad{color:var(--bad)}
+.svg-host{width:100%;max-width:100%;display:block;border:1px solid var(--border);border-radius:12px;background:var(--card);overflow:hidden}
+.svg-host svg{display:block;width:100%;height:auto;max-width:100%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:8px 2px;font-size:0.82rem;color:var(--text)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend i.ln{height:3px;width:18px;border-radius:2px;vertical-align:3px}
+details{margin:8px 0}
+summary{cursor:pointer;font-weight:600;color:var(--primary);padding:4px 0;font-size:0.9rem}
+pre.code{background:#0a1a45;color:#d6e4ff;padding:14px;border-radius:12px;overflow:auto;font-size:0.78rem;max-height:340px;-webkit-overflow-scrolling:touch}
+.sub{color:var(--muted);font-size:0.83rem}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.step{background:var(--soft);border:1px solid var(--border);border-radius:12px;padding:10px 12px;font-size:0.85rem}
+.step b{color:var(--primary)}
+.chip{display:inline-block;margin:2px;padding:2px 9px;border-radius:8px;background:var(--soft);border:1px solid var(--border);font-size:0.78rem}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;place-items:center;z-index:100;padding:14px;overflow-y:auto}
+.modal.on{display:grid}
+.modal-box{background:var(--card);color:var(--text);border-radius:16px;max-width:560px;width:100%;max-height:92vh;overflow:auto;box-shadow:0 25px 50px rgba(0,0,0,.5);border:1px solid var(--border);margin:auto}
+.modal-head{padding:16px 20px;background:linear-gradient(135deg,var(--side1),var(--primary-2));color:#fff;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:1}
+.modal-head h3{margin:0;color:#fff;font-size:1.05rem}
+.modal-head button{background:rgba(255,255,255,.2);border:0;color:#fff;min-width:34px;min-height:34px;border-radius:50%;cursor:pointer;font-size:1rem}
+.modal-body{padding:20px}
+.modal-body p{font-size:0.9rem;line-height:1.7;margin:0 0 12px}
+.modal-body .row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:0.88rem;margin:0;gap:12px}
+.modal-body .row:last-of-type{border-bottom:none}
+.modal-body .row b{color:var(--primary)}
+.modal-foot{padding:14px;text-align:center;background:var(--soft);border-radius:0 0 16px 16px;font-weight:700;color:var(--primary);font-size:0.85rem;letter-spacing:1px;border-top:1px solid var(--border)}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:1024px){
+  main{padding:16px 16px 60px}
+  .unithead h2{font-size:1.3rem}
+}
+@media (max-width:860px){
+  html{font-size:14px}
+  #burger{display:flex}
+  nav#side{position:fixed;left:0;top:0;z-index:40;transform:translateX(-100%);height:100vh;width:82vw;max-width:320px;padding-top:16px}
+  nav#side.open{transform:none;box-shadow:0 0 40px rgba(0,0,0,.5)}
+  .layout{min-height:calc(100% - 60px)}
+  main{padding:14px 12px 50px}
+  header{padding:6px 10px}
+  header h1{font-size:0.88rem}
+  header .inst{font-size:0.62rem}
+  .iconbtn{padding:8px 9px;font-size:0.72rem;min-height:36px}
+  .iconbtn span{display:none}
+  .iconbtn i{display:inline}
+  .unithead h2{font-size:1.2rem}
+  .card{padding:12px;border-radius:14px}
+  .grid2{grid-template-columns:1fr;gap:10px}
+  .kpi{min-width:110px;padding:8px 12px}
+  .kpi b{font-size:1.15rem}
+  .modal-body{padding:16px}
+  table.t{font-size:0.76rem}
+  table.t th,table.t td{padding:5px 6px}
+  table.t input{width:60px}
+  .tabs{padding:2px 2px 8px}
+  .tab{padding:8px 12px;font-size:0.8rem}
+}
+@media (max-width:520px){
+  html{font-size:13.5px}
+  header{gap:6px;padding:6px 8px}
+  .logo{width:30px;height:30px;font-size:0.9rem}
+  header h1{font-size:0.82rem}
+  header .inst{font-size:0.58rem;letter-spacing:.2px}
+  header small{font-size:0.64rem}
+  .iconbtn{padding:7px;font-size:0.7rem;min-height:34px}
+  .unithead h2{font-size:1.1rem}
+  .unithead p{font-size:0.82rem}
+  .card{padding:10px}
+  .card h3{font-size:0.98rem}
+  .btn{padding:9px 12px;font-size:0.82rem;min-height:38px}
+  .btn.sm{padding:5px 8px;font-size:0.72rem;min-height:30px}
+  .step{font-size:0.82rem;padding:8px 10px}
+  .modal-body{padding:14px}
+  .modal-body .row{font-size:0.82rem;padding:7px 0}
+  .kpi{padding:7px 10px}
+  .kpi b{font-size:1.05rem}
+  .kpi span{font-size:0.7rem}
+  .svg-legend,.legend{font-size:0.76rem}
+  pre.code{font-size:0.72rem;padding:10px}
+}
+@media (max-width:380px){
+  header h1{font-size:0.76rem}
+  .iconbtn{padding:6px;min-height:32px}
+  .num{width:24px;height:24px;font-size:0.78rem}
+  .kpi b{font-size:1rem}
+}
+
+/* ---------- IMPRESIÓN ---------- */
+@media print{
+  header,nav#side,.tabs,.btn,.row button,#themeBtn,#infoBtn,#burger,#overlay{display:none !important}
+  body{background:#fff;color:#000;font-size:11pt}
+  main{padding:0;max-width:100%}
+  .card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid;margin-bottom:10px;padding:12px}
+  .svg-host{border:1px solid #ccc;page-break-inside:avoid}
+  .kpis{page-break-inside:avoid}
+  table.t{page-break-inside:avoid;font-size:9pt}
+  table.t th{background:#eef4ff !important;color:#1d4ed8 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.t td.hl{background:#fff3c4 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .note{background:#f5f8ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .legend i,.legend i.ln{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{size:A4 portrait;margin:12mm}
+}
+</style>
+</head>
+<body>
+<header>
+  <button class="iconbtn" id="burger" aria-label="Menú">☰</button>
+  <div class="logo">Σ</div>
+  <div class="hinfo">
+    <span class="inst">INSTITUTO TECNOLÓGICO DE TUXTEPEC</span>
+    <h1>Modelos de Optimización de Recursos <small>ICC-1028 · Ing. Civil · Rod Compañ 2026</small></h1>
+  </div>
+  <button class="iconbtn" id="printBtn" aria-label="Imprimir" title="Imprimir / Guardar PDF">🖨️ <span>PDF</span></button>
+  <button class="iconbtn" id="infoBtn" aria-label="Información">ℹ️ <span>Info</span></button>
+  <button class="iconbtn" id="themeBtn" aria-label="Cambiar tema">🌙 <span>Oscuro</span></button>
+</header>
+<div id="overlay"></div>
+<div class="layout"><nav id="side"></nav><main id="main"></main></div>
+
+<div class="modal" id="infoModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>ℹ️ Información del Programa</h3>
+      <button id="infoClose" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p><b>Descripción:</b> Herramienta interactiva para la resolución de problemas de <b>Modelos de Optimización de Recursos</b> aplicados a la Ingeniería Civil. Cubre seis unidades temáticas: enfoque sistémico, programación lineal (gráfico, simplex y sensibilidad), algoritmos especiales (transporte y asignación), flujos en redes (camino más corto, flujo máximo y árbol de expansión mínima), control de proyectos (CPM/PERT, tiempo-costo y nivelación de recursos) y simulación de operaciones (líneas de espera e inventarios). Todas las gráficas son SVG vectoriales, incluye modo claro/oscuro, impresión a PDF y diseño responsivo para móviles.</p>
+      <div class="row"><span><b>Versión:</b></span><span>4.1.0</span></div>
+      <div class="row"><span><b>Diseñador:</b></span><span>Rod Compañ</span></div>
+      <div class="row"><span><b>Fecha de creación:</b></span><span>2026</span></div>
+      <div class="row"><span><b>Asignatura:</b></span><span>ICC-1028 - Modelos de Optimización de Recursos</span></div>
+      <div class="row"><span><b>Carrera:</b></span><span>Ingeniería Civil</span></div>
+      <div class="row"><span><b>Institución:</b></span><span>Instituto Tecnológico de Tuxtepec</span></div>
+    </div>
+    <div class="modal-foot">TECNM-ITTUX</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const EPS=1e-9;
+const SUBD='₀₁₂₃₄₅₆₇₈₉';
+const sub=i=>String(i).split('').map(d=>SUBD[+d]).join('');
+function fmt(x,d=4){
+  if(x===undefined||x===null||Number.isNaN(x)) return '—';
+  if(x===Infinity) return '∞'; if(x===-Infinity) return '-∞';
+  let r=Math.round(x*Math.pow(10,d))/Math.pow(10,d); if(Object.is(r,-0)) r=0; return String(r);
+}
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const PALV=['--s1','--s2','--s3','--s4','--s5','--s6','--s7','--s8'];
+const pal=i=>css(PALV[i%PALV.length]);
+const note=(t,k='')=>`<div class="note ${k}">${t}</div>`;
+const kpis=a=>`<div class="kpis">${a.map(([v,l])=>`<div class="kpi"><b>${v}</b><span>${l}</span></div>`).join('')}</div>`;
+let _uid=0; const uid=p=>p+(++_uid);
+
+function tbl(head,rows,cls=''){
+  return `<div class="tw"><table class="t ${cls}"><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${
+    rows.map(r=>{const tr=r.__tr?` class="${r.__tr}"`:'';return `<tr${tr}>${r.map(c=>{
+      if(c&&typeof c==='object'){return `<td class="${c.c||''}">${c.h}</td>`}
+      return `<td>${c}</td>`}).join('')}</tr>`}).join('')}</tbody></table></div>`;
+}
+
+const _charts=[];
+function reg(fn){_charts.push(fn);try{fn()}catch(e){console.error('chart error',e)}}
+function redrawAll(){_charts.forEach(f=>{try{f()}catch(e){console.error(e)}});}
+function clearCharts(){_charts.length=0;}
+const svgHost=(id)=>`<div class="svg-host" id="${id}"></div>`;
+const legend=items=>`<div class="legend">${items.map(([n,c,ln])=>`<span><i class="${ln?'ln':''}" style="background:${c}"></i>${esc(n)}</span>`).join('')}</div>`;
+
+function niceTicks(min,max,n=6){
+  if(max<=min) max=min+1;
+  const span=max-min,s0=span/n,mag=Math.pow(10,Math.floor(Math.log10(s0))),nm=s0/mag;
+  const step=(nm<1.5?1:nm<3?2:nm<7?5:10)*mag;
+  const t=[];for(let v=Math.ceil(min/step-1e-9)*step;v<=max+step*1e-6;v+=step)t.push(+v.toFixed(10));
+  return {t,step};
+}
+function axisRange(min,max){
+  if(max<=min) max=min+1;
+  const {step}=niceTicks(min,max,6);
+  return [Math.floor(min/step+1e-9)*step,Math.ceil(max/step-1e-9)*step];
+}
+function svgEsc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function svgText(s,x,y,o={}){
+  const attrs=[`x="${x}"`,`y="${y}"`,`fill="${o.color||'currentColor'}"`,`font-size="${o.size||12}"`];
+  if(o.anchor)attrs.push(`text-anchor="${o.anchor}"`);
+  if(o.baseline)attrs.push(`dominant-baseline="${o.baseline}"`);
+  if(o.weight)attrs.push(`font-weight="${o.weight}"`);
+  if(o.rot)attrs.push(`transform="rotate(${o.rot} ${x} ${y})"`);
+  if(o.family)attrs.push(`font-family="${o.family}"`);
+  return `<text ${attrs.join(' ')}>${svgEsc(s)}</text>`;
+}
+
+function svgPlot2d(host,o){
+  const W=o.width||780,H=o.height||430;
+  const m={l:68,r:22,t:o.title?38:18,b:o.xlabel?54:36};
+  const pw=W-m.l-m.r,ph=H-m.t-m.b;
+  const X=x=>m.l+(x-o.xmin)/(o.xmax-o.xmin)*pw,Y=y=>m.t+ph-(y-o.ymin)/(o.ymax-o.ymin)*ph;
+  const grid=css('--grid'),axis=css('--axis'),mut=css('--muted'),text=css('--text');
+  const xt=o.xticks||niceTicks(o.xmin,o.xmax,8).t.map(v=>({v,label:fmt(v,2)}));
+  const yt=o.yticks||niceTicks(o.ymin,o.ymax,6).t.map(v=>({v,label:fmt(v,2)}));
+  let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">`;
+  s+=`<rect x="0" y="0" width="${W}" height="${H}" fill="${css('--card')}"/>`;
+  yt.forEach(t=>{const y=Y(t.v);s+=`<line x1="${m.l}" y1="${y}" x2="${W-m.r}" y2="${y}" stroke="${grid}" stroke-width="1"/>`;});
+  if(!o.noxgrid) xt.forEach(t=>{const x=X(t.v);s+=`<line x1="${x}" y1="${m.t}" x2="${x}" y2="${m.t+ph}" stroke="${grid}" stroke-width="1"/>`;});
+  yt.forEach(t=>{const y=Y(t.v);s+=svgText(t.label,m.l-8,y+4,{anchor:'end',color:mut,size:11});});
+  xt.forEach(t=>{s+=svgText(t.label,X(t.v),m.t+ph+18,{anchor:'middle',color:mut,size:11});});
+  const clipId=uid('clip');
+  s+=`<defs><clipPath id="${clipId}"><rect x="${m.l}" y="${m.t}" width="${pw}" height="${ph}"/></clipPath></defs>`;
+  let inner='';
+  if(o.draw)o.draw({X,Y,add:(str)=>{inner+=str;}}, {m,W,H,pw,ph});
+  s+=`<g clip-path="url(#${clipId})">${inner}</g>`;
+  s+=`<line x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${m.t+ph}" stroke="${axis}" stroke-width="1.5"/>`;
+  s+=`<line x1="${m.l}" y1="${m.t+ph}" x2="${W-m.r}" y2="${m.t+ph}" stroke="${axis}" stroke-width="1.5"/>`;
+  if(o.title)s+=svgText(o.title,m.l,24,{size:14,weight:600,color:text});
+  if(o.xlabel)s+=svgText(o.xlabel,m.l+pw/2,H-10,{anchor:'middle',color:mut,size:12});
+  if(o.ylabel)s+=svgText(o.ylabel,16,m.t+ph/2,{anchor:'middle',color:mut,size:12,rot:-90});
+  s+=`</svg>`;
+  document.getElementById(host).innerHTML=s;
+}
+
+function svgBars(host,o){
+  const n=o.labels.length,S=o.series;
+  let mx=0,mn=0;
+  for(let i=0;i<n;i++){
+    if(o.stacked){let p=0,q=0;S.forEach(s=>{const v=s.values[i]||0;v>=0?p+=v:q+=v});mx=Math.max(mx,p);mn=Math.min(mn,q);}
+    else S.forEach(s=>{const v=s.values[i]||0;mx=Math.max(mx,v);mn=Math.min(mn,v)});
+  }
+  if(o.refLine!==undefined)mx=Math.max(mx,o.refLine);
+  const [ymin,ymax]=axisRange(mn,mx||1);
+  const every=Math.ceil(n/(o.maxLabels||22));
+  const xticks=o.labels.map((l,i)=>({v:i+.5,label:i%every===0?String(l):''}));
+  svgPlot2d(host,{width:o.width||780,height:o.height||380,title:o.title,xlabel:o.xlabel,ylabel:o.ylabel,xmin:0,xmax:n,ymin,ymax,xticks,noxgrid:true,
+    draw:(g)=>{
+      const {X,Y,add}=g;const gap=n>40?0.1:0.22,k=o.stacked?1:S.length,bw=(1-gap*2)/k;
+      for(let i=0;i<n;i++){
+        let pos=0,neg=0;
+        S.forEach((s,j)=>{
+          const v=s.values[i]||0;if(!v)return;
+          const col=s.color||pal(j);
+          let x0,x1,y0,y1;
+          if(o.stacked){x0=i+gap;x1=i+1-gap;if(v>=0){y0=pos;y1=pos+v;pos=y1}else{y0=neg;y1=neg+v;neg=y1}}
+          else{x0=i+gap+bw*j;x1=x0+bw;y0=0;y1=v}
+          const px=X(x0),pwv=Math.max(1,X(x1)-X(x0)-(o.stacked?0:1)),ya=Y(y0),yb=Y(y1);
+          const top=Math.min(ya,yb),h=Math.max(Math.abs(ya-yb)-(o.stacked?1:0),1);
+          add(`<rect x="${px}" y="${top}" width="${pwv}" height="${h}" rx="3" fill="${col}"/>`);
+          if(o.valueLabels&&n<=14&&!o.stacked) add(svgText(fmt(v,2),px+pwv/2,top-5,{anchor:'middle',size:11,color:css('--text')}));
+        });
+      }
+      if(o.refLine!==undefined){
+        add(`<line x1="${X(0)}" y1="${Y(o.refLine)}" x2="${X(n)}" y2="${Y(o.refLine)}" stroke="${css('--s8')}" stroke-width="1.6" stroke-dasharray="6,4"/>`);
+      }
+    }});
+}
+
+function svgLines(host,o){
+  let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity;
+  o.series.forEach(s=>s.pts.forEach(([x,y])=>{x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y)}));
+  if(o.ymin!==undefined)y0=o.ymin; if(o.ymax!==undefined)y1=o.ymax;
+  if(!isFinite(x0)){x0=0;x1=1;y0=0;y1=1}
+  if(x1<=x0)x1=x0+1;
+  const [ya,yb]=axisRange(y0,y1);let [xa,xb]=o.intX?[x0,x1]:axisRange(x0,x1);
+  svgPlot2d(host,{width:o.width||780,height:o.height||380,title:o.title,xlabel:o.xlabel,ylabel:o.ylabel,xmin:xa,xmax:xb,ymin:ya,ymax:yb,
+    draw:(g)=>{
+      const {X,Y,add}=g;
+      o.series.forEach((s,j)=>{
+        const col=s.color||pal(j);
+        let d='';
+        s.pts.forEach(([x,y],k)=>{
+          if(k===0)d+=`M ${X(x)} ${Y(y)}`;
+          else if(s.step)d+=` L ${X(x)} ${Y(s.pts[k-1][1])} L ${X(x)} ${Y(y)}`;
+          else d+=` L ${X(x)} ${Y(y)}`;
+        });
+        add(`<path d="${d}" fill="none" stroke="${col}" stroke-width="2" stroke-dasharray="${(s.dash||[]).join(',')}"/>`);
+        if(s.markers){s.pts.forEach(([x,y])=>{add(`<circle cx="${X(x)}" cy="${Y(y)}" r="3.6" fill="${col}" stroke="${css('--card')}" stroke-width="2"/>`);});}
+      });
+      if(o.extra)o.extra({X,Y,add});
+    }});
+}
+
+class GraphView{
+  constructor(hostEl,opts={}){
+    this.host=typeof hostEl==='string'?document.getElementById(hostEl):hostEl;
+    this.W=opts.width||780;this.H=opts.height||440;this.pos={};this.nodes=[];this.edges=[];this.drag=null;this.drawable=opts.drag!==false;
+    this.host.classList.add('svg-host');
+    this.bind();
+  }
+  set(nodes,edges,fixed){
+    this.nodes=nodes;this.edges=edges;
+    if(fixed){Object.assign(this.pos,fixed);}
+    const miss=nodes.filter(n=>!this.pos[n.id]);
+    if(miss.length){
+      const all=nodes.length,cx=this.W/2,cy=this.H/2,rx=this.W/2-60,ry=this.H/2-50;
+      nodes.forEach((n,i)=>{if(!this.pos[n.id]){const a=-Math.PI/2+2*Math.PI*i/all;this.pos[n.id]={x:cx+rx*Math.cos(a),y:cy+ry*Math.sin(a)};}});
+    }
+    this.draw();
+  }
+  bound(n,ux,uy){
+    if(n.w){const tx=Math.abs(ux)>1e-9?(n.w/2)/Math.abs(ux):1e9,ty=Math.abs(uy)>1e-9?(n.h/2)/Math.abs(uy):1e9;return Math.min(tx,ty)+2;}
+    return (n.r||19)+2;
+  }
+  draw(){
+    const {W,H}=this;const text=css('--text');
+    let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="touch-action:none">`;
+    s+=`<rect x="0" y="0" width="${W}" height="${H}" fill="${css('--card')}"/>`;
+    const byId={};this.nodes.forEach(n=>byId[n.id]=n);
+    const key=(a,b)=>a+'\u0001'+b;const has=new Set(this.edges.map(e=>key(e.u,e.v)));
+    this.edges.forEach(e=>{
+      const A=byId[e.u],B=byId[e.v],pa=this.pos[e.u],pb=this.pos[e.v];if(!A||!B||!pa||!pb)return;
+      let dx=pb.x-pa.x,dy=pb.y-pa.y;const len=Math.hypot(dx,dy)||1;const ux=dx/len,uy=dy/len,px=-uy,py=ux;
+      const off=e.directed&&has.has(key(e.v,e.u))?9:0;
+      const sx=pa.x+px*off+ux*this.bound(A,ux,uy),sy=pa.y+py*off+uy*this.bound(A,ux,uy);
+      const ex=pb.x+px*off-ux*this.bound(B,ux,uy),ey=pb.y+py*off-uy*this.bound(B,ux,uy);
+      const col=e.color||css('--axis');
+      const dash=e.dash?`stroke-dasharray="${e.dash.join(',')}"`:'';
+      s+=`<line x1="${sx}" y1="${sy}" x2="${ex}" y2="${ey}" stroke="${col}" stroke-width="${e.width||2}" ${dash}/>`;
+      if(e.directed){
+        const a=Math.atan2(ey-sy,ex-sx);
+        const p1x=ex-Math.cos(a-0.4)*11,p1y=ey-Math.sin(a-0.4)*11;
+        const p2x=ex-Math.cos(a+0.4)*11,p2y=ey-Math.sin(a+0.4)*11;
+        s+=`<polygon points="${ex},${ey} ${p1x},${p1y} ${p2x},${p2y}" fill="${col}"/>`;
+      }
+      if(e.label!==undefined&&e.label!==''){
+        const mx=(sx+ex)/2+px*(off?off*0.9:0),my=(sy+ey)/2+py*(off?off*0.9:0);
+        const txtW=String(e.label).length*7+10;
+        s+=`<rect x="${mx-txtW/2}" y="${my-9}" width="${txtW}" height="17" rx="3" fill="${css('--card')}" opacity="0.9"/>`;
+        s+=svgText(e.label,mx,my+4,{anchor:'middle',size:12,weight:600,color:e.lcolor||text});
+      }
+    });
+    this.nodes.forEach(n=>{
+      const p=this.pos[n.id];if(!p)return;const stroke=n.color||css('--primary-2');
+      const fill=n.fill||css('--soft');
+      if(n.w){
+        s+=`<rect x="${p.x-n.w/2}" y="${p.y-n.h/2}" width="${n.w}" height="${n.h}" rx="8" fill="${fill}" stroke="${stroke}" stroke-width="${n.bw||2.2}"/>`;
+        const L=n.lines||[n.id];const lh=14;let y=p.y-(L.length-1)*lh/2+4;
+        L.forEach((str,i)=>{s+=svgText(str,p.x,y,{anchor:'middle',size:i===0?12.5:11.5,weight:i===0?700:400,color:text});y+=lh;});
+      }else{
+        s+=`<circle cx="${p.x}" cy="${p.y}" r="${n.r||19}" fill="${fill}" stroke="${stroke}" stroke-width="${n.bw||2.2}"/>`;
+        s+=svgText(n.label||n.id,p.x,p.y+4.5,{anchor:'middle',size:13,weight:700,color:text});
+        if(n.sub)s+=svgText(n.sub,p.x,p.y-(n.r||19)-6,{anchor:'middle',size:11.5,weight:600,color:n.color||text});
+      }
+    });
+    s+=`</svg>`;
+    this.host.innerHTML=s;
+  }
+  bind(){
+    const host=this.host;
+    host.addEventListener('pointerdown',ev=>{
+      if(!this.drawable)return;
+      const r=host.getBoundingClientRect();const q={x:(ev.clientX-r.left)*this.W/r.width,y:(ev.clientY-r.top)*this.H/r.height};
+      for(const n of this.nodes){const p=this.pos[n.id];if(!p)continue;const hw=n.w?n.w/2:(n.r||19),hh=n.w?n.h/2:(n.r||19);
+        if(Math.abs(q.x-p.x)<=hw&&Math.abs(q.y-p.y)<=hh){this.drag={id:n.id,dx:p.x-q.x,dy:p.y-q.y};host.setPointerCapture(ev.pointerId);break;}}
+    });
+    host.addEventListener('pointermove',ev=>{
+      if(!this.drag)return;
+      const r=host.getBoundingClientRect();const q={x:(ev.clientX-r.left)*this.W/r.width,y:(ev.clientY-r.top)*this.H/r.height};
+      this.pos[this.drag.id]={x:Math.max(20,Math.min(this.W-20,q.x+this.drag.dx)),y:Math.max(20,Math.min(this.H-20,q.y+this.drag.dy))};
+      this.draw();
+    });
+    const up=()=>{this.drag=null};
+    host.addEventListener('pointerup',up);host.addEventListener('pointercancel',up);
+  }
+}
+
+function codeBlock(title,text,fname){
+  const id=uid('cb');
+  return `<div class="card"><h3>${esc(title)}</h3><div class="row"><button class="btn sm sec" data-copy="${id}">Copiar</button>${fname?`<button class="btn sm sec" data-dl="${id}" data-fn="${esc(fname)}">Descargar</button>`:''}</div><pre class="code" id="${id}">${esc(text)}</pre></div>`;
+}
+document.addEventListener('click',ev=>{
+  const b=ev.target.closest('[data-copy],[data-dl]');if(!b)return;
+  if(b.dataset.copy){const t=document.getElementById(b.dataset.copy).textContent;
+    (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{b.textContent='¡Copiado!';setTimeout(()=>b.textContent='Copiar',1200)}).catch(()=>{const r=document.createRange();r.selectNode(document.getElementById(b.dataset.copy));getSelection().removeAllRanges();getSelection().addRange(r);});}
+  if(b.dataset.dl){const t=document.getElementById(b.dataset.dl).textContent;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=b.dataset.fn;a.click();}
+});
+function normCdf(z){const t=1/(1+0.2316419*Math.abs(z));const d=0.3989423*Math.exp(-z*z/2);let p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return z>0?1-p:p;}
+function rng(seed){let a=seed>>>0;return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const UNITS=[];
+function gotoTab(unit,tab){location.hash=`#${unit}/${tab}`;}
+
+/* ==================== IMPRIMIR ==================== */
+function imprimirReporte(){
+  const unitTitle = $('#main .unithead h2')?.textContent || 'Reporte';
+  const activeTab = $('#main .tab.on')?.textContent || '';
+  const panel = $('#panel');
+  if(!panel){window.print();return;}
+
+  let body = '';
+  body += `<div class="rep-head">
+    <div class="rep-title">${esc(unitTitle)}</div>
+    ${activeTab?`<div class="rep-sub">${esc(activeTab)}</div>`:''}
+  </div>`;
+
+  const cards = panel.querySelectorAll('.card');
+  cards.forEach(card=>{
+    const h3 = card.querySelector('h3');
+    const title = h3 ? h3.textContent : '';
+    let content = '';
+    card.querySelectorAll('.kpis').forEach(k=>{
+      content += `<div class="rep-kpis">${Array.from(k.querySelectorAll('.kpi')).map(kp=>`<div class="rep-kpi"><b>${esc(kp.querySelector('b').textContent)}</b><span>${esc(kp.querySelector('span').textContent)}</span></div>`).join('')}</div>`;
+    });
+    card.querySelectorAll('.note').forEach(n=>{content += `<div class="rep-note">${n.innerHTML}</div>`;});
+    card.querySelectorAll('table.t').forEach(t=>{
+      const rows = Array.from(t.querySelectorAll('tr')).map(tr=>{
+        const isHead = !!tr.closest('thead');
+        const cells = Array.from(tr.children).map(td=>{
+          const tag = isHead?'th':'td';
+          const cls = td.className || '';
+          return `<${tag} class="${cls}">${td.innerHTML}</${tag}>`;
+        }).join('');
+        return `<tr>${cells}</tr>`;
+      }).join('');
+      content += `<table class="rep-table">${rows}</table>`;
+    });
+    card.querySelectorAll('.svg-host svg').forEach(svg=>{
+      const clon = svg.cloneNode(true);
+      content += `<div class="rep-svg">${clon.outerHTML}</div>`;
+    });
+    if(content){
+      body += `<div class="rep-card">${title?`<div class="rep-card-title">${esc(title)}</div>`:''}${content}</div>`;
+    }
+  });
+
+  if(!body.trim() || body.trim()===`<div class="rep-head"><div class="rep-title">${esc(unitTitle)}</div></div>`){
+    body += panel.innerHTML;
+  }
+
+  const fecha = new Date().toLocaleDateString('es-MX',{day:'2-digit',month:'long',year:'numeric'});
+  const hora = new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+
+  const html = `<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>${esc(unitTitle)} - Reporte</title>
+<style>
+@page{size:A4 portrait;margin:12mm 10mm}
+*{box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;color:#111;background:#fff;margin:0;padding:0;font-size:11px;line-height:1.4}
+.rep-header{text-align:center;padding-bottom:8px;margin-bottom:12px;border-bottom:2px solid #1d4ed8}
+.rep-header h1{color:#0b2a72;font-size:14px;margin:0 0 2px}
+.rep-header h2{color:#1d4ed8;font-size:11px;margin:0 0 2px;font-weight:600}
+.rep-header p{font-size:9px;color:#555;margin:1px 0}
+.rep-title{font-size:13px;color:#0b2a72;font-weight:700;margin:6px 0 2px}
+.rep-sub{font-size:11px;color:#1d4ed8;font-weight:600;margin-bottom:6px}
+.rep-card{border:1px solid #ccc;border-radius:6px;padding:8px 10px;margin-bottom:10px;page-break-inside:avoid}
+.rep-card-title{font-size:11px;font-weight:700;color:#1d4ed8;margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid #e5e7eb}
+.rep-kpis{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.rep-kpi{flex:1 1 90px;background:#eef4ff;border:1px solid #d3def5;border-radius:6px;padding:5px 7px;min-width:80px}
+.rep-kpi b{display:block;font-size:13px;color:#1d4ed8;word-break:break-word}
+.rep-kpi span{font-size:8px;color:#555}
+.rep-note{background:#f5f8ff;border-left:3px solid #1d4ed8;padding:5px 8px;margin:6px 0;font-size:10px;border-radius:4px}
+.rep-note.ok{border-color:#0a8a3a}.rep-note.warn{border-color:#b45309}.rep-note.err{border-color:#c62828}
+.rep-table{width:100%;border-collapse:collapse;margin:5px 0;font-size:9.5px;page-break-inside:avoid}
+.rep-table th,.rep-table td{border:1px solid #cbd5e1;padding:3px 5px;text-align:center}
+.rep-table th{background:#eef4ff;color:#1d4ed8;font-weight:600;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.rep-table td.l,.rep-table th.l{text-align:left}
+.rep-table td.hl{background:#fff3c4;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.rep-table td.piv{background:#2563eb;color:#fff;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.rep-table td.crit{background:#fbe4e4;font-weight:700;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.rep-svg{margin:6px 0;page-break-inside:avoid;text-align:center}
+.rep-svg svg{max-width:100%;height:auto;display:block;margin:0 auto}
+.rep-footer{margin-top:14px;padding-top:8px;border-top:1px solid #ccc;text-align:center;font-size:9px;color:#555}
+.rep-footer strong{color:#0b2a72;letter-spacing:.5px}
+details{display:none}
+</style></head><body>
+<div class="rep-header">
+  <h1>INSTITUTO TECNOLÓGICO DE TUXTEPEC</h1>
+  <h2>Modelos de Optimización de Recursos — ICC-1028 · Ing. Civil</h2>
+  <p>Diseñador: Rod Compañ · Generado: ${fecha} ${hora}</p>
+</div>
+${body}
+<div class="rep-footer"><strong>TECNM-ITTUX</strong> · Rod Compañ 2026</div>
+<script>
+window.onload=function(){setTimeout(function(){window.print();},350);};
+<\/script>
+</body></html>`;
+
+  const w = window.open('', '_blank');
+  if(!w){alert('Permite las ventanas emergentes para imprimir el reporte.');return;}
+  w.document.open(); w.document.write(html); w.document.close();
+}
+
+/* ================= UNIDAD 1 ================= */
+(function(){
+const U={id:'u1',n:1,title:'El enfoque sistémico en las organizaciones',desc:'Toma de decisiones, sistemas y modelos. Incluye un resolvedor de decisiones bajo incertidumbre.',tabs:[]};
+const DEC={alts:['Zapatas aisladas','Losa de cimentación','Pilotes'],states:['Suelo firme','Suelo medio','Suelo blando'],
+ pay:[[90,50,-20],[70,60,30],[40,45,55]],prob:[0.3,0.5,0.2],alpha:0.6,mode:'util'};
+function decide(D){
+  const n=D.alts.length,m=D.states.length,P=D.pay,isU=D.mode==='util';
+  const best=r=>isU?Math.max(...r):Math.min(...r),worst=r=>isU?Math.min(...r):Math.max(...r);
+  const colBest=j=>best(P.map(r=>r[j]));
+  const reg=P.map(r=>r.map((v,j)=>Math.abs(colBest(j)-v)));
+  const out={};
+  out['Maximax / Minimin (optimista)']=P.map(r=>best(r));
+  out['Maximin / Minimax (Wald, pesimista)']=P.map(r=>worst(r));
+  out['Hurwicz (α)']=P.map(r=>D.alpha*best(r)+(1-D.alpha)*worst(r));
+  out['Laplace (equiprobable)']=P.map(r=>r.reduce((a,b)=>a+b,0)/m);
+  out['Valor esperado (con probabilidades)']=P.map(r=>r.reduce((a,v,j)=>a+v*D.prob[j],0));
+  const savage=reg.map(r=>Math.max(...r));
+  const pick={};
+  const sel=(arr,max)=>{const t=max?Math.max(...arr):Math.min(...arr);return arr.indexOf(t);};
+  pick['Maximax / Minimin (optimista)']=sel(out['Maximax / Minimin (optimista)'],isU);
+  pick['Maximin / Minimax (Wald, pesimista)']=sel(out['Maximin / Minimax (Wald, pesimista)'],isU);
+  pick['Hurwicz (α)']=sel(out['Hurwicz (α)'],isU);
+  pick['Laplace (equiprobable)']=sel(out['Laplace (equiprobable)'],isU);
+  pick['Valor esperado (con probabilidades)']=sel(out['Valor esperado (con probabilidades)'],isU);
+  const ev=out['Valor esperado (con probabilidades)'];
+  const evpi=P[0].map((_,j)=>colBest(j)*D.prob[j]).reduce((a,b)=>a+b,0)-(isU?Math.max(...ev):Math.min(...ev));
+  return {out,pick,savage,reg,evpi:Math.abs(evpi),savPick:savage.indexOf(Math.min(...savage))};
+}
+U.tabs.push({id:'1.1',title:'1.1 Toma de decisiones e I.O.',render(h){
+  h.innerHTML=`
+  <div class="card"><h3>Proceso de toma de decisiones y la investigación operativa</h3>
+   <p>La <b>Investigación de Operaciones (I.O.)</b> aplica métodos científicos y matemáticos para apoyar decisiones sobre el uso óptimo de recursos. Etapas del proceso:</p>
+   <div class="steps">${['Definición del problema','Formulación de objetivos y restricciones','Construcción del modelo','Solución del modelo','Validación del modelo','Implementación','Control y retroalimentación'].map((s,i)=>`<div class="step"><b>${i+1}.</b> ${s}</div>`).join('')}</div>
+   <p class="sub">Tipos de decisión: bajo <b>certidumbre</b>, <b>riesgo</b> e <b>incertidumbre</b>.</p>
+  </div>
+  <div class="card"><h3>Resolvedor: decisión bajo riesgo e incertidumbre</h3>
+   <div class="row"><label>Los valores son <select id="dmode"><option value="util">Utilidades (maximizar)</option><option value="cost">Costos (minimizar)</option></select></label>
+   <label>α de Hurwicz <input type="number" id="dalpha" min="0" max="1" step="0.1" value="${DEC.alpha}"></label>
+   <label>Alternativas <input type="number" id="dn" min="2" max="6" value="${DEC.alts.length}"></label>
+   <label>Estados <input type="number" id="dm" min="2" max="6" value="${DEC.states.length}"></label>
+   <button class="btn sec sm" id="dresize">Redimensionar</button></div>
+   <div id="dgrid"></div><div id="dout"></div></div>`;
+  const grid=()=>{
+    $('#dgrid').innerHTML=`<div class="tw"><table class="t"><thead><tr><th>Alternativa \\ Estado</th>${DEC.states.map((s,j)=>`<th><input class="w" data-s="${j}" value="${esc(s)}"></th>`).join('')}</tr></thead><tbody>
+     ${DEC.alts.map((a,i)=>`<tr><td><input class="w" data-a="${i}" value="${esc(a)}"></td>${DEC.pay[i].map((v,j)=>`<td><input type="number" data-p="${i},${j}" value="${v}"></td>`).join('')}</tr>`).join('')}
+     <tr class="tot"><td>Probabilidad</td>${DEC.prob.map((v,j)=>`<td><input type="number" step="0.05" data-q="${j}" value="${v}"></td>`).join('')}</tr></tbody></table></div>`;
+  };
+  const run=()=>{
+    DEC.mode=$('#dmode').value;DEC.alpha=+$('#dalpha').value;
+    const r=decide(DEC),sumP=DEC.prob.reduce((a,b)=>a+b,0);
+    const crit=Object.keys(r.out);
+    const rows=crit.map(k=>[{h:k,c:'l'},...r.out[k].map((v,i)=>({h:fmt(v,3),c:i===r.pick[k]?'hl':''})),{h:'<b>'+esc(DEC.alts[r.pick[k]])+'</b>',c:'l'}]);
+    rows.push([{h:'Savage (mínimo arrepentimiento máx.)',c:'l'},...r.savage.map((v,i)=>({h:fmt(v,3),c:i===r.savPick?'hl':''})),{h:'<b>'+esc(DEC.alts[r.savPick])+'</b>',c:'l'}]);
+    $('#dout').innerHTML=(Math.abs(sumP-1)>1e-6?note('Las probabilidades suman '+fmt(sumP,3)+'.','warn'):'')+
+      tbl(['Criterio',...DEC.alts.map(esc),'Decisión'],rows)+
+      kpis([[fmt(r.evpi,3),'EVPI']])+
+      '<h4>Valor de cada alternativa por criterio</h4>'+svgHost('dch')+legend(DEC.alts.map((a,i)=>[a,pal(i)]));
+    reg(()=>svgBars('dch',{labels:crit.map(c=>c.split(' (')[0]),series:DEC.alts.map((a,i)=>({name:a,values:crit.map(c=>r.out[c][i]),color:pal(i)})),ylabel:'Valor',height:380,maxLabels:10}));
+  };
+  const bindAll=()=>{
+    grid();
+    $('#dgrid').oninput=e=>{const t=e.target;
+      if(t.dataset.s!==undefined)DEC.states[+t.dataset.s]=t.value;
+      else if(t.dataset.a!==undefined)DEC.alts[+t.dataset.a]=t.value;
+      else if(t.dataset.p){const [i,j]=t.dataset.p.split(',').map(Number);DEC.pay[i][j]=+t.value||0;}
+      else if(t.dataset.q!==undefined)DEC.prob[+t.dataset.q]=+t.value||0;
+      run();};
+    run();
+  };
+  $('#dmode').value=DEC.mode;
+  $('#dmode').onchange=run;$('#dalpha').oninput=run;
+  $('#dresize').onclick=()=>{
+    const n=Math.max(2,Math.min(6,+$('#dn').value||3)),m=Math.max(2,Math.min(6,+$('#dm').value||3));
+    while(DEC.alts.length<n){DEC.alts.push('Alternativa '+(DEC.alts.length+1));DEC.pay.push(Array(DEC.states.length).fill(0));}
+    DEC.alts.length=n;DEC.pay.length=n;
+    while(DEC.states.length<m){DEC.states.push('Estado '+(DEC.states.length+1));DEC.prob.push(0);DEC.pay.forEach(r=>r.push(0));}
+    DEC.states.length=m;DEC.prob.length=m;DEC.pay.forEach(r=>r.length=m);
+    bindAll();
+  };
+  bindAll();
+}});
+
+const SYS={name:'Obra de construcción',ent:'Materiales\nMano de obra\nMaquinaria\nFinanciamiento',proc:'Planeación, programación\ny ejecución de obra',sal:'Edificio terminado\nResiduos\nCosto real',ret:'Control de avance y costos',amb:'Clima, normativa, mercado',
+ cls:{Relación:'Abierto',Origen:'Artificial',Comportamiento:'Probabilístico',Tiempo:'Dinámico',Complejidad:'Complejo'}};
+U.tabs.push({id:'1.2',title:'1.2 Sistemas',render(h){
+  h.innerHTML=`
+  <div class="card"><h3>Concepto y clasificación de sistemas</h3>
+   <p>Un <b>sistema</b> es un conjunto de elementos interrelacionados que operan para lograr un objetivo común.</p>
+   ${tbl(['Criterio','Tipos'],[[{h:'Relación con el entorno',c:'l'},{h:'Abiertos · Cerrados',c:'l'}],
+    [{h:'Origen',c:'l'},{h:'Naturales · Artificiales',c:'l'}],
+    [{h:'Comportamiento',c:'l'},{h:'Determinísticos · Probabilísticos',c:'l'}],
+    [{h:'Tiempo',c:'l'},{h:'Estáticos · Dinámicos',c:'l'}],
+    [{h:'Complejidad',c:'l'},{h:'Simples · Complejos',c:'l'}]])}
+  </div>
+  <div class="card"><h3>Constructor del diagrama de un sistema</h3>
+   <div class="grid2"><div>
+    <div class="row"><label>Sistema <input class="w" style="width:100%;max-width:240px" id="sname" value="${esc(SYS.name)}"></label></div>
+    <label class="sub">Entradas (una por línea)</label><textarea id="sent" rows="4">${esc(SYS.ent)}</textarea>
+    <label class="sub">Proceso</label><textarea id="sproc" rows="2">${esc(SYS.proc)}</textarea>
+    <label class="sub">Salidas</label><textarea id="ssal" rows="3">${esc(SYS.sal)}</textarea>
+    <div class="row"><label>Retroalimentación <input style="width:100%;max-width:230px" id="sret" value="${esc(SYS.ret)}"></label></div>
+    <div class="row"><label>Ambiente <input style="width:100%;max-width:260px" id="samb" value="${esc(SYS.amb)}"></label></div>
+   </div><div>
+    <h4>Clasificación</h4><div class="row" id="cls">
+    ${Object.entries({Relación:['Abierto','Cerrado'],Origen:['Artificial','Natural'],Comportamiento:['Probabilístico','Determinístico'],Tiempo:['Dinámico','Estático'],Complejidad:['Complejo','Simple']}).map(([k,o])=>`<label>${k}<select data-k="${k}">${o.map(x=>`<option ${SYS.cls[k]===x?'selected':''}>${x}</option>`).join('')}</select></label>`).join('')}</div>
+    <div id="sres"></div></div></div>
+   ${svgHost('sysc')}
+  </div>`;
+  const draw=()=>{
+    SYS.name=$('#sname').value;SYS.ent=$('#sent').value;SYS.proc=$('#sproc').value;SYS.sal=$('#ssal').value;SYS.ret=$('#sret').value;SYS.amb=$('#samb').value;
+    $$('#cls select').forEach(s=>SYS.cls[s.dataset.k]=s.value);
+    $('#sres').innerHTML=note(`<b>${esc(SYS.name)}</b> es un sistema <b>${SYS.cls['Relación'].toLowerCase()}</b>, <b>${SYS.cls['Origen'].toLowerCase()}</b>, <b>${SYS.cls['Comportamiento'].toLowerCase()}</b>, <b>${SYS.cls['Tiempo'].toLowerCase()}</b> y <b>${SYS.cls['Complejidad'].toLowerCase()}</b>.`);
+    reg(()=>{
+      const W=780,H=360;
+      const text=css('--text'),pri=css('--primary-2'),soft=css('--soft'),mut=css('--muted');
+      let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">`;
+      s+=`<rect x="0" y="0" width="${W}" height="${H}" fill="${css('--card')}"/>`;
+      s+=`<rect x="10" y="10" width="${W-20}" height="${H-20}" fill="none" stroke="${mut}" stroke-width="1.6" stroke-dasharray="7,5"/>`;
+      s+=svgText('AMBIENTE: '+SYS.amb,24,30,{color:mut,size:12,weight:600});
+      s+=`<rect x="120" y="50" width="540" height="230" rx="16" fill="${soft}" stroke="${pri}" stroke-width="2.4"/>`;
+      s+=svgText('SISTEMA: '+SYS.name,140,74,{size:13,weight:700,color:pri});
+      const box=(x,y,w,hh,t,lines,col)=>{
+        let r=`<rect x="${x}" y="${y}" width="${w}" height="${hh}" rx="10" fill="${css('--card')}" stroke="${col}" stroke-width="2"/>`;
+        r+=svgText(t,x+w/2,y+18,{anchor:'middle',size:12,weight:700,color:col});
+        lines.split('\n').slice(0,5).forEach((str,i)=>{r+=svgText(str,x+w/2,y+38+i*16,{anchor:'middle',size:12,color:text});});
+        return r;};
+      s+=box(150,100,150,110,'ENTRADAS',SYS.ent,css('--s3'));
+      s+=box(335,110,150,90,'PROCESO',SYS.proc,pri);
+      s+=box(520,100,120,110,'SALIDAS',SYS.sal,css('--s2'));
+      const arrow=(x1,y1,x2,y2,col,w=2)=>{
+        const a=Math.atan2(y2-y1,x2-x1);
+        return `<line x1="${x1}" y1="${y1}" x2="${x2-Math.cos(a)*10}" y2="${y2-Math.sin(a)*10}" stroke="${col}" stroke-width="${w}"/>
+          <polygon points="${x2},${y2} ${x2-Math.cos(a-0.4)*10},${y2-Math.sin(a-0.4)*10} ${x2-Math.cos(a+0.4)*10},${y2-Math.sin(a+0.4)*10}" fill="${col}"/>`;};
+      s+=arrow(300,155,335,155,text,2);s+=arrow(485,155,520,155,text,2);
+      s+=`<line x1="580" y1="214" x2="580" y2="250" stroke="${css('--s5')}" stroke-width="2" stroke-dasharray="5,4"/>`;
+      s+=`<line x1="580" y1="250" x2="225" y2="250" stroke="${css('--s5')}" stroke-width="2"/>`;
+      s+=arrow(225,250,225,212,css('--s5'),2);
+      s+=svgText('RETROALIMENTACIÓN: '+SYS.ret,400,268,{anchor:'middle',size:12,weight:600,color:css('--s5')});
+      s+=arrow(20,155,150,155,css('--s3'),2.4);s+=arrow(640,155,765,155,css('--s2'),2.4);
+      s+=svgText('entra',60,146,{color:mut,size:12});s+=svgText('sale',690,146,{color:mut,size:12});
+      s+=`</svg>`;
+      document.getElementById('sysc').innerHTML=s;
+    });
+  };
+  h.oninput=draw;h.onchange=draw;draw();
+}});
+
+const WIZ=[{q:'¿Qué quieres decidir?',o:[['Cómo asignar recursos limitados a actividades para maximizar utilidad o minimizar costo','pl'],['Cómo distribuir un producto de varios orígenes a varios destinos al menor costo','tr'],['Asignar personas/máquinas a tareas uno a uno','asg'],['Encontrar rutas, flujos o conexiones en una red','red'],['Programar y controlar un proyecto (tiempos, costos, recursos)','cpm'],['Analizar un sistema con aleatoriedad (filas de espera, inventarios)','sim'],['Decidir bajo incertidumbre entre alternativas','dec']]}];
+const REC={pl:['Programación lineal','u2','2.1'],tr:['Problema de transporte','u3','3.1'],asg:['Problema de asignación','u3','3.2'],red:['Modelos de redes','u4','4.1'],cpm:['CPM/PERT, costo-tiempo y nivelación','u5','5.1'],sim:['Simulación','u6','6.1'],dec:['Teoría de decisiones','u1','1.1']};
+U.tabs.push({id:'1.3',title:'1.3 Modelos',render(h){
+  h.innerHTML=`<div class="card"><h3>Concepto y tipología de modelos</h3>
+   <p>Un <b>modelo</b> es una representación simplificada de la realidad que conserva los aspectos relevantes para decidir.</p>
+   ${tbl(['Tipo','Descripción','Ejemplo'],[
+    [{h:'Icónico',c:'l'},{h:'Réplica a escala',c:'l'},{h:'Maqueta de una presa',c:'l'}],
+    [{h:'Analógico',c:'l'},{h:'Una propiedad representa a otra',c:'l'},{h:'Analogía eléctrica del flujo de agua',c:'l'}],
+    [{h:'Simbólico',c:'l'},{h:'Ecuaciones y relaciones lógicas',c:'l'},{h:'PL de mezclas de concreto',c:'l'}],
+    [{h:'Determinístico',c:'l'},{h:'Parámetros conocidos con certeza',c:'l'},{h:'Costo mínimo de transporte',c:'l'}],
+    [{h:'Probabilístico',c:'l'},{h:'Incluye variables aleatorias',c:'l'},{h:'Llegada de camiones a una obra',c:'l'}],
+    [{h:'Estático / dinámico',c:'l'},{h:'Sin / con evolución en el tiempo',c:'l'},{h:'Presupuesto fijo vs. flujo mensual',c:'l'}],
+    [{h:'Descriptivo · Predictivo · Normativo',c:'l'},{h:'Describe · pronostica · prescribe',c:'l'},{h:'PL es normativo',c:'l'}]])}
+   <h4>Componentes de un modelo matemático</h4>
+   <div class="steps"><div class="step"><b>Variables de decisión</b><br>Lo que se controla</div><div class="step"><b>Función objetivo</b><br>Medida a max/min</div><div class="step"><b>Restricciones</b><br>Limitaciones</div><div class="step"><b>Parámetros</b><br>Datos conocidos</div></div></div>
+  <div class="card"><h3>Asistente: ¿qué modelo me conviene?</h3><div class="row"><select id="wz" style="max-width:100%;width:100%">${WIZ[0].o.map((o,i)=>`<option value="${o[1]}">${o[0]}</option>`).join('')}</select></div><div id="wzo"></div></div>`;
+  const f=()=>{const r=REC[$('#wz').value];$('#wzo').innerHTML=note(`Técnica recomendada: <b>${r[0]}</b>`)+`<button class="btn" id="wzgo">Ir al módulo →</button>`;$('#wzgo').onclick=()=>gotoTab(r[1],r[2]);};
+  $('#wz').onchange=f;f();
+}});
+UNITS.push(U);
+})();
+/* ================= UNIDAD 2 ================= */
+const vn=j=>'x'+sub(j+1);
+function linExpr(co,names){
+  let s='';co.forEach((c,j)=>{if(Math.abs(c)<1e-12)return;const a=Math.abs(c);const t=(a===1?'':fmt(a,4))+names(j);
+    s+=s===''?(c<0?'-':'')+t:(c<0?' − ':' + ')+t;});return s||'0';
+}
+function lpText(M,nm=vn,zn='Z'){
+  const ops={'<=':'≤','>=':'≥','=':'='};
+  return `<b>${M.sense==='max'?'Maximizar':'Minimizar'}</b> ${zn} = ${linExpr(M.c,nm)}<br>sujeto a:<br>`+
+    M.rows.map(r=>`&nbsp;&nbsp;${linExpr(r.a,nm)} ${ops[r.op]} ${fmt(r.b,4)}`).join('<br>');
+}
+function lpSolve(model){
+  const n=model.c.length,sgn=model.sense==='max'?1:-1;
+  const rows=model.rows.map(r=>{let a=r.a.slice(),b=r.b,op=r.op,s=1;if(b<0){a=a.map(v=>-v);b=-b;s=-1;op=op==='<='?'>=':op==='>='?'<=':'=';}return{a,b,op,s};});
+  const m=rows.length,names=[],types=[];
+  for(let j=0;j<n;j++){names.push(vn(j));types.push('x');}
+  const A=rows.map(r=>r.a.slice()),basis=new Array(m);
+  const addCol=(nm,t)=>{names.push(nm);types.push(t);A.forEach(r=>r.push(0));return names.length-1;};
+  let hasArt=false;
+  rows.forEach((r,i)=>{
+    if(r.op==='<='){const j=addCol('s'+sub(i+1),'s');A[i][j]=1;basis[i]=j;}
+    else if(r.op==='>='){const j=addCol('e'+sub(i+1),'e');A[i][j]=-1;const k=addCol('a'+sub(i+1),'a');A[i][k]=1;basis[i]=k;hasArt=true;}
+    else{const k=addCol('a'+sub(i+1),'a');A[i][k]=1;basis[i]=k;hasArt=true;}
+  });
+  const A0=A.map(r=>r.slice());
+  const T={A,b:rows.map(r=>r.b),basis,names,types};
+  const cmax=model.c.map(v=>sgn*v);
+  const snap=(c,phase,e,r,nt)=>{
+    const cB=T.basis.map(j=>c[j]),N=T.names.length;const z=[],d=[];
+    for(let j=0;j<N;j++){let s=0;for(let i=0;i<T.A.length;i++)s+=cB[i]*T.A[i][j];z[j]=s;d[j]=c[j]-s;}
+    let Z=0;T.basis.forEach((_,i)=>Z+=cB[i]*T.b[i]);
+    return{phase,note:nt||'',names:T.names.slice(),types:T.types.slice(),show:T.names.map((_,j)=>phase===1||T.types[j]!=='a'),A:T.A.map(r=>r.slice()),b:T.b.slice(),basis:T.basis.slice(),cB,c:c.slice(),z,d,Z,enter:e,leave:r};
+  };
+  const pivot=(r,e)=>{
+    const p=T.A[r][e];T.A[r]=T.A[r].map(v=>v/p);T.b[r]/=p;
+    for(let i=0;i<T.A.length;i++){if(i===r)continue;const f=T.A[i][e];if(f===0)continue;
+      T.A[i]=T.A[i].map((v,j)=>{const x=v-f*T.A[r][j];return Math.abs(x)<1e-12?0:x;});T.b[i]-=f*T.b[r];if(Math.abs(T.b[i])<1e-12)T.b[i]=0;}
+    T.basis[r]=e;
+  };
+  const iters=[];
+  const run=(c,phase,allowed)=>{
+    for(let it=0;it<300;it++){
+      const s=snap(c,phase);let e=-1,best=1e-9;
+      for(let j=0;j<s.names.length;j++){if(!allowed(j)||T.basis.includes(j))continue;if(s.d[j]>best+1e-12){best=s.d[j];e=j;}}
+      if(e<0){s.note='Óptimo: todos los c_j − z_j ≤ 0';iters.push(s);return'optimal';}
+      let r=-1,br=Infinity;
+      for(let i=0;i<T.A.length;i++){if(T.A[i][e]>1e-9){const q=T.b[i]/T.A[i][e];if(q<br-1e-12||(Math.abs(q-br)<=1e-12&&T.basis[i]<T.basis[r])){br=q;r=i;}}}
+      if(r<0){s.enter=e;s.note='Columna sin elementos positivos: no acotado';iters.push(s);return'unbounded';}
+      s.enter=e;s.leave=r;s.ratios=T.A.map((row,i)=>row[e]>1e-9?T.b[i]/row[e]:null);iters.push(s);pivot(r,e);
+    }
+    return'maxiter';
+  };
+  let status;
+  if(hasArt){
+    const c1=names.map((_,j)=>types[j]==='a'?-1:0);
+    const st=run(c1,1,()=>true);
+    const last=iters[iters.length-1];
+    if(st!=='optimal'||last.Z<-1e-7){return{status:'infeasible',iters,names,types,model,rows,n,sgn};}
+    last.note='Fin de la Fase 1: variables artificiales = 0 → solución básica factible encontrada';
+    for(let i=T.A.length-1;i>=0;i--){
+      if(types[T.basis[i]]==='a'){
+        let j=-1;for(let k=0;k<names.length;k++)if(types[k]!=='a'&&Math.abs(T.A[i][k])>1e-9){j=k;break;}
+        if(j>=0)pivot(i,j);else{T.A.splice(i,1);T.b.splice(i,1);T.basis.splice(i,1);A0.splice(i,1);}
+      }
+    }
+  }
+  const c2=names.map((_,j)=>j<n?cmax[j]:0);
+  status=run(c2,2,j=>types[j]!=='a');
+  const fin=iters[iters.length-1];
+  const x=new Array(n).fill(0);T.basis.forEach((j,i)=>{if(j<n)x[j]=T.b[i];});
+  const res={status,iters,names,types,model,rows,n,sgn,x,A:T.A,b:T.b,basis:T.basis,A0,cmax,d:fin.d,removed:rows.length-T.A.length};
+  if(status==='optimal'){
+    let Z=0;model.c.forEach((c,j)=>Z+=c*x[j]);res.z=Math.abs(Z)<1e-10?0:Z;
+    res.alt=fin.d.some((v,j)=>fin.show[j]&&!T.basis.includes(j)&&Math.abs(v)<1e-9);
+    res.degenerate=T.b.some(v=>Math.abs(v)<1e-9);
+  }
+  return res;
+}
+function lpSolveGeneral(model){
+  const vars=model.vars||model.c.map(()=>'nn'),map=[];
+  vars.forEach((t,j)=>{if(t==='nn')map.push({j,s:1});else if(t==='np')map.push({j,s:-1});else{map.push({j,s:1});map.push({j,s:-1});}});
+  const m2={sense:model.sense,c:map.map(q=>q.s*model.c[q.j]),rows:model.rows.map(r=>({a:map.map(q=>q.s*r.a[q.j]),op:r.op,b:r.b}))};
+  const res=lpSolve(m2);
+  if(res.status==='optimal'){const x=new Array(model.c.length).fill(0);map.forEach((q,k)=>x[q.j]+=q.s*res.x[k]);res.x=x;}
+  return res;
+}
+function lpDual(M){
+  const isMax=M.sense==='max';
+  const vars=M.rows.map(r=>r.op==='='?'free':isMax?(r.op==='<='?'nn':'np'):(r.op==='>='?'nn':'np'));
+  return{sense:isMax?'min':'max',c:M.rows.map(r=>r.b),vars,rows:M.c.map((cj,j)=>({a:M.rows.map(r=>r.a[j]),op:isMax?'>=':'<=',b:cj}))};
+}
+function matInv(B){
+  const m=B.length,M=B.map((r,i)=>[...r,...Array.from({length:m},(_,j)=>i===j?1:0)]);
+  for(let c=0;c<m;c++){let p=c;for(let i=c+1;i<m;i++)if(Math.abs(M[i][c])>Math.abs(M[p][c]))p=i;
+    if(Math.abs(M[p][c])<1e-12)return null;[M[c],M[p]]=[M[p],M[c]];const d=M[c][c];M[c]=M[c].map(v=>v/d);
+    for(let i=0;i<m;i++)if(i!==c){const f=M[i][c];if(f)M[i]=M[i].map((v,j)=>v-f*M[c][j]);}}
+  return M.map(r=>r.slice(m));
+}
+function lpSens(M,res){
+  if(res.status!=='optimal'||res.removed||res.basis.some(j=>res.types[j]==='a'))return null;
+  const m=res.rows.length;
+  const Bm=Array.from({length:m},(_,k)=>res.basis.map(j=>res.A0[k][j]));
+  const Bi=matInv(Bm);if(!Bi)return null;
+  const cB=res.basis.map(j=>j<res.n?res.cmax[j]:0),xB=res.b;
+  const y=Array.from({length:m},(_,i)=>cB.reduce((a,c,k)=>a+c*Bi[k][i],0));
+  const shadow=[],rhs=[];
+  for(let i=0;i<m;i++){
+    const s=res.rows[i].s;shadow.push(res.sgn*y[i]*s);
+    let lo=-Infinity,hi=Infinity;
+    for(let k=0;k<m;k++){const g=Bi[k][i];if(g>1e-12)lo=Math.max(lo,-xB[k]/g);else if(g<-1e-12)hi=Math.min(hi,xB[k]/-g);}
+    let a=lo/s,b=hi/s;if(s<0)[a,b]=[b,a];
+    rhs.push([M.rows[i].b+a,M.rows[i].b+b]);
+  }
+  const crange=[];
+  for(let j=0;j<res.n;j++){
+    const r=res.basis.indexOf(j);let L,H;
+    if(r<0){H=res.cmax[j]-res.d[j];L=-Infinity;}
+    else{let lo=-Infinity,hi=Infinity;
+      res.names.forEach((_,k)=>{if(res.types[k]==='a'||res.basis.includes(k))return;const al=res.A[r][k],dk=res.d[k];
+        if(al>1e-9)lo=Math.max(lo,dk/al);else if(al<-1e-9)hi=Math.min(hi,dk/al);});
+      L=res.cmax[j]+lo;H=res.cmax[j]+hi;}
+    crange.push(res.sgn===1?[L,H,r<0?'No básica':'Básica']:[-H,-L,r<0?'No básica':'Básica']);
+    if(res.sgn===-1&&r<0)crange[j]=[-H,Infinity,'No básica'];
+  }
+  return{y,shadow,rhs,crange};
+}
+const LPX={
+ prefab:{name:'Prefabricados (máx, 2 variables)',sense:'max',c:[500,400],rows:[{a:[2,3],op:'<=',b:120},{a:[4,2],op:'<=',b:160},{a:[1,0],op:'<=',b:35}]},
+ wyndor:{name:'Wyndor (máx clásico)',sense:'max',c:[3,5],rows:[{a:[1,0],op:'<=',b:4},{a:[0,2],op:'<=',b:12},{a:[3,2],op:'<=',b:18}]},
+ mezcla:{name:'Mezcla (mín, ≥)',sense:'min',c:[0.6,0.35],rows:[{a:[5,7],op:'>=',b:8},{a:[4,2],op:'>=',b:15},{a:[2,1],op:'>=',b:3}]},
+ tres:{name:'Tres variables (máx)',sense:'max',c:[3,2,5],rows:[{a:[1,2,1],op:'<=',b:430},{a:[3,0,2],op:'<=',b:460},{a:[1,4,0],op:'<=',b:420}]},
+ igual:{name:'Con igualdad (mín)',sense:'min',c:[2,3],rows:[{a:[1,1],op:'=',b:10},{a:[1,0],op:'>=',b:2},{a:[0,1],op:'<=',b:7}]},
+ multi:{name:'Óptimos múltiples',sense:'max',c:[2,4],rows:[{a:[1,2],op:'<=',b:8},{a:[1,0],op:'<=',b:6},{a:[0,1],op:'<=',b:3}]},
+ unb:{name:'No acotado',sense:'max',c:[1,1],rows:[{a:[1,-1],op:'<=',b:1}]},
+ inf:{name:'Infactible',sense:'max',c:[1,1],rows:[{a:[1,1],op:'<=',b:2},{a:[1,1],op:'>=',b:5}]}
+};
+const LP=JSON.parse(JSON.stringify(LPX.prefab));
+function lpModel(){return{sense:LP.sense,c:LP.c.slice(),rows:LP.rows.map(r=>({a:r.a.slice(),op:r.op,b:r.b}))};}
+function lpEditor(host,onChange){
+  const draw=()=>{
+    const n=LP.c.length,m=LP.rows.length;
+    host.innerHTML=`<div class="card"><h3>Modelo de programación lineal</h3>
+     <div class="row"><label>Objetivo <select id="lsense"><option value="max">Maximizar</option><option value="min">Minimizar</option></select></label>
+     <label>Variables <input type="number" id="ln" min="1" max="8" value="${n}"></label>
+     <label>Restricciones <input type="number" id="lm" min="1" max="8" value="${m}"></label>
+     <button class="btn sec sm" id="lres">Aplicar tamaño</button>
+     <label>Ejemplo <select id="lex"><option value="">— cargar —</option>${Object.entries(LPX).map(([k,v])=>`<option value="${k}">${v.name}</option>`).join('')}</select></label></div>
+     <div class="tw"><table class="t"><thead><tr><th></th>${LP.c.map((_,j)=>`<th>${vn(j)}</th>`).join('')}<th></th><th>RHS</th></tr></thead><tbody>
+      <tr><td><b>Z</b></td>${LP.c.map((v,j)=>`<td><input type="number" step="any" data-c="${j}" value="${v}"></td>`).join('')}<td></td><td></td></tr>
+      ${LP.rows.map((r,i)=>`<tr><td>R${sub(i+1)}</td>${r.a.map((v,j)=>`<td><input type="number" step="any" data-a="${i},${j}" value="${v}"></td>`).join('')}
+       <td><select data-o="${i}">${['<=','>=','='].map(o=>`<option value="${o}" ${r.op===o?'selected':''}>${o==='<='?'≤':o==='>='?'≥':'='}</option>`).join('')}</select></td>
+       <td><input type="number" step="any" data-b="${i}" value="${r.b}"></td></tr>`).join('')}</tbody></table></div>
+     <p class="sub">Todas las variables son no negativas (x ≥ 0).</p></div>`;
+    $('#lsense').value=LP.sense;
+    $('#lsense').onchange=e=>{LP.sense=e.target.value;onChange&&onChange();};
+    $('#lres').onclick=()=>{const nn=Math.max(1,Math.min(8,+$('#ln').value||2)),mm=Math.max(1,Math.min(8,+$('#lm').value||2));
+      while(LP.c.length<nn){LP.c.push(0);LP.rows.forEach(r=>r.a.push(0));}
+      LP.c.length=nn;LP.rows.forEach(r=>r.a.length=nn);
+      while(LP.rows.length<mm)LP.rows.push({a:Array(nn).fill(0),op:'<=',b:0});LP.rows.length=mm;draw();onChange&&onChange();};
+    $('#lex').onchange=e=>{if(!e.target.value)return;const x=JSON.parse(JSON.stringify(LPX[e.target.value]));LP.sense=x.sense;LP.c=x.c;LP.rows=x.rows;draw();onChange&&onChange();};
+    host.querySelector('table').oninput=e=>{const t=e.target,d=t.dataset,v=parseFloat(t.value);
+      if(d.c!==undefined)LP.c[+d.c]=isNaN(v)?0:v;
+      else if(d.a){const [i,j]=d.a.split(',').map(Number);LP.rows[i].a[j]=isNaN(v)?0:v;}
+      else if(d.b!==undefined)LP.rows[+d.b].b=isNaN(v)?0:v;
+      onChange&&onChange();};
+    host.querySelector('table').onchange=e=>{const d=e.target.dataset;if(d.o!==undefined){LP.rows[+d.o].op=e.target.value;onChange&&onChange();}};
+  };
+  draw();
+}
+function lpResultHTML(M,res){
+  if(res.status==='infeasible')return note('<b>Problema infactible:</b> las restricciones son incompatibles.','err');
+  if(res.status==='unbounded')return note('<b>Problema no acotado:</b> la función objetivo puede mejorar indefinidamente.','warn');
+  if(res.status!=='optimal')return note('No se alcanzó la solución (límite de iteraciones).','err');
+  const ops=M.rows.map((r,i)=>{const lhs=r.a.reduce((a,v,j)=>a+v*res.x[j],0);const sl=r.op==='<='?r.b-lhs:r.op==='>='?lhs-r.b:0;return{lhs,sl,bind:Math.abs(sl)<1e-7};});
+  return kpis([[fmt(res.z,4),'Z óptima'],...res.x.map((v,j)=>[fmt(v,4),vn(j)])])+
+   (res.alt?note('<b>Óptimos múltiples.</b>','warn'):note('Solución óptima única.','ok'))+
+   (res.degenerate?note('Solución degenerada.'):'')+
+   tbl(['Restricción','Lado izq.','Tipo','Lado der.','Holgura','Estado'],M.rows.map((r,i)=>[`R${sub(i+1)}`,fmt(ops[i].lhs,4),r.op==='<='?'≤':r.op==='>='?'≥':'=',fmt(r.b,4),fmt(ops[i].sl,4),ops[i].bind?'<span class="badge bad">Activa</span>':'<span class="badge ok">Con holgura</span>']));
+}
+const UL={id:'u2',n:2,title:'El modelo de programación lineal',desc:'Planteamiento, primal y dual, método gráfico, simplex tabular y análisis de sensibilidad.',tabs:[]};
+const wrap=(h,fn)=>{h.innerHTML='<div id="ed"></div><div id="out"></div>';const go=()=>{clearCharts();try{fn($('#out'))}catch(e){console.error(e);$('#out').innerHTML=note('Error: '+esc(e.message),'err')}};lpEditor($('#ed'),go);go();};
+
+UL.tabs.push({id:'2.1',title:'2.1 Planteamiento',render(h){wrap(h,o=>{
+  const M=lpModel(),res=lpSolve(M);
+  o.innerHTML=`<div class="card"><h3>Formulación matemática</h3><p class="sub">Variables: ${M.c.map((_,j)=>vn(j)).join(', ')} ≥ 0</p><p>${lpText(M)}</p></div>
+   <div class="card"><h3>Solución</h3>${lpResultHTML(M,res)}
+   ${res.status==='optimal'?`<div class="grid2"><div><h4>Valores de las variables</h4>${svgHost('c1')}</div><div><h4>Uso de recursos (≤)</h4>${svgHost('c2')}</div></div>`:''}</div>`;
+  if(res.status==='optimal'){
+    reg(()=>svgBars('c1',{labels:res.x.map((_,j)=>vn(j)),series:[{name:'x',values:res.x,color:pal(0)}],valueLabels:true,height:320,ylabel:'Valor'}));
+    const le=M.rows.map((r,i)=>({r,i})).filter(q=>q.r.op==='<=' &&q.r.b>0);
+    if(le.length)reg(()=>svgBars('c2',{labels:le.map(q=>'R'+sub(q.i+1)),series:[{name:'Uso %',values:le.map(q=>100*q.r.a.reduce((a,v,j)=>a+v*res.x[j],0)/q.r.b),color:pal(2)}],valueLabels:true,height:320,ylabel:'% del recurso',refLine:100}));
+  }
+});}});
+
+UL.tabs.push({id:'2.2',title:'2.2 Primal y dual',render(h){wrap(h,o=>{
+  const M=lpModel(),P=lpSolve(M),D=lpDual(M),yn=i=>'y'+sub(i+1),RD=lpSolveGeneral(D);
+  const vt=D.vars.map((t,i)=>t==='nn'?`${yn(i)} ≥ 0`:t==='np'?`${yn(i)} ≤ 0`:`${yn(i)} libre`).join(', ');
+  let cmp='',after=()=>{};
+  if(P.status==='optimal'&&RD.status==='optimal'){
+    const rows=M.rows.map((r,i)=>{const lhs=r.a.reduce((a,v,j)=>a+v*P.x[j],0),sl=r.op==='<='?r.b-lhs:r.op==='>='?lhs-r.b:0;return[`R${sub(i+1)} (holgura ${fmt(sl,4)})`,`${yn(i)} = ${fmt(RD.x[i],4)}`,fmt(sl*RD.x[i],6),sl*RD.x[i]===0||Math.abs(sl*RD.x[i])<1e-7?'✔':'✘']});
+    const rows2=M.c.map((cj,j)=>{const dl=D.rows[j].a.reduce((a,v,i)=>a+v*RD.x[i],0)-cj;return[`${vn(j)} = ${fmt(P.x[j],4)}`,`exceso dual = ${fmt(Math.abs(dl),4)}`,fmt(P.x[j]*dl,6),Math.abs(P.x[j]*dl)<1e-7?'✔':'✘']});
+    cmp=kpis([[fmt(P.z,4),'Z primal'],[fmt(RD.z,4),'W dual'],[Math.abs(P.z-RD.z)<1e-6?'Iguales ✔':'Distintos','Dualidad fuerte']])+
+      '<h4>Holgura complementaria</h4>'+tbl(['Primal','Dual','Producto','¿= 0?'],[...rows,...rows2])+
+      '<h4>Precios sombra</h4>'+svgHost('c1')+legend([['Valor de y',pal(0)]]);
+    after=()=>reg(()=>svgBars('c1',{labels:RD.x.map((_,i)=>yn(i)+' (R'+(i+1)+')'),series:[{name:'y',values:RD.x,color:pal(0)}],valueLabels:true,height:330,ylabel:'Precio sombra'}));
+  }else cmp=note('Uno de los problemas no tiene solución óptima.','warn');
+  o.innerHTML=`<div class="grid2"><div class="card"><h3>Modelo primal</h3><p>${lpText(M)}</p></div>
+   <div class="card"><h3>Modelo dual</h3><p>${lpText(D,yn,'W')}<br><span class="sub">${vt}</span></p></div></div>
+   <div class="card"><h3>Resultados</h3>${cmp}</div>
+   <div class="card"><h3>Reglas primal ↔ dual</h3>${tbl(['Primal (máx)','Dual (mín)'],[['Restricción ≤','Variable y ≥ 0'],['Restricción ≥','Variable y ≤ 0'],['Restricción =','Variable y libre'],['Variable x ≥ 0','Restricción ≥'],['Coeficientes c','Lado derecho'],['Lado derecho b','Coeficientes de Z']])}</div>`;
+  after();
+});}});
+
+function clipPoly(P,a1,a2,b){
+  const out=[];for(let i=0;i<P.length;i++){const A=P[i],B=P[(i+1)%P.length],fa=a1*A[0]+a2*A[1]-b,fb=a1*B[0]+a2*B[1]-b;
+    if(fa<=1e-9)out.push(A);
+    if((fa<-1e-9&&fb>1e-9)||(fa>1e-9&&fb<-1e-9)){const t=fa/(fa-fb);out.push([A[0]+t*(B[0]-A[0]),A[1]+t*(B[1]-A[1])]);}}
+  return out;
+}
+function lpGeom(M){
+  const H=[...M.rows,{a:[1,0],op:'>=',b:0},{a:[0,1],op:'>=',b:0}];
+  const feas=p=>H.every(r=>{const v=r.a[0]*p[0]+r.a[1]*p[1];return r.op==='<='?v<=r.b+1e-7:r.op==='>='?v>=r.b-1e-7:Math.abs(v-r.b)<1e-7;});
+  const V=[];
+  for(let i=0;i<H.length;i++)for(let j=i+1;j<H.length;j++){
+    const a=H[i].a,b=H[j].a,det=a[0]*b[1]-a[1]*b[0];if(Math.abs(det)<1e-12)continue;
+    const p=[(H[i].b*b[1]-a[1]*H[j].b)/det,(a[0]*H[j].b-H[i].b*b[0])/det];
+    if(feas(p)&&!V.some(q=>Math.hypot(q[0]-p[0],q[1]-p[1])<1e-7))V.push(p);}
+  return{V,H};
+}
+UL.tabs.push({id:'2.3',title:'2.3 Método gráfico',render(h){wrap(h,o=>{
+  const M=lpModel();
+  if(M.c.length!==2){o.innerHTML=note('El método gráfico requiere exactamente <b>2 variables</b>.','warn');return;}
+  const {V}=lpGeom(M),res=lpSolve(M);
+  const pts=[...V];M.rows.forEach(r=>{if(r.a[0]>0&&r.b/r.a[0]>0)pts.push([r.b/r.a[0],0]);if(r.a[1]>0&&r.b/r.a[1]>0)pts.push([0,r.b/r.a[1]]);});
+  const xm=Math.max(1,...pts.map(p=>p[0]))*1.25,ym=Math.max(1,...pts.map(p=>p[1]))*1.25;
+  let poly=[[0,0],[xm,0],[xm,ym],[0,ym]];
+  M.rows.forEach(r=>{if(r.op==='<=')poly=clipPoly(poly,r.a[0],r.a[1],r.b);else if(r.op==='>=')poly=clipPoly(poly,-r.a[0],-r.a[1],-r.b);else{poly=clipPoly(poly,r.a[0],r.a[1],r.b+1e-6);poly=clipPoly(poly,-r.a[0],-r.a[1],-r.b+1e-6);}});
+  const opt=res.status==='optimal'?res.x:null;
+  o.innerHTML=`<div class="card"><h3>Región factible y solución óptima</h3>${svgHost('g')}
+    ${legend([...M.rows.map((r,i)=>['R'+(i+1)+': '+r.a[0]+'x₁ + '+r.a[1]+'x₂ '+(r.op==='<='?'≤':r.op==='>='?'≥':'=')+' '+fmt(r.b),pal(i),1]),['Región factible',pal(0)],['Recta de Z',css('--text'),1]])}
+    ${res.status!=='optimal'?note(res.status==='unbounded'?'Región no acotada.':'No hay región factible.','warn'):''}
+    <h4>Vértices de la región factible</h4>
+    ${V.length?tbl(['Vértice','x₁','x₂','Z'],V.map((p,i)=>{const hit=opt&&Math.hypot(p[0]-opt[0],p[1]-opt[1])<1e-6;return[{h:'V'+(i+1),c:hit?'hl':''},{h:fmt(p[0]),c:hit?'hl':''},{h:fmt(p[1]),c:hit?'hl':''},{h:fmt(M.c[0]*p[0]+M.c[1]*p[1]),c:hit?'hl':''}]})):'<p class="sub">Sin vértices factibles.</p>'}
+    <p class="sub">Teorema fundamental: si existe un óptimo finito, se alcanza en al menos un vértice.</p></div>`;
+  reg(()=>{
+    const W=800,H=470,pad={l:60,r:20,t:36,b:52};
+    const pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+    const X=x=>pad.l+(x/xm)*pw,Y=y=>pad.t+ph-(y/ym)*ph;
+    const text=css('--text'),grid=css('--grid'),mut=css('--muted'),axis=css('--axis');
+    let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet"><rect width="${W}" height="${H}" fill="${css('--card')}"/>`;
+    const xt=niceTicks(0,xm,8).t,yt=niceTicks(0,ym,6).t;
+    xt.forEach(v=>{s+=`<line x1="${X(v)}" y1="${pad.t}" x2="${X(v)}" y2="${pad.t+ph}" stroke="${grid}" stroke-width="1"/>`;});
+    yt.forEach(v=>{s+=`<line x1="${pad.l}" y1="${Y(v)}" x2="${pad.l+pw}" y2="${Y(v)}" stroke="${grid}" stroke-width="1"/>`;});
+    xt.forEach(v=>s+=svgText(fmt(v,2),X(v),pad.t+ph+18,{anchor:'middle',color:mut,size:11}));
+    yt.forEach(v=>s+=svgText(fmt(v,2),pad.l-8,Y(v)+4,{anchor:'end',color:mut,size:11}));
+    s+=`<line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t+ph}" stroke="${axis}" stroke-width="1.5"/>`;
+    s+=`<line x1="${pad.l}" y1="${pad.t+ph}" x2="${pad.l+pw}" y2="${pad.t+ph}" stroke="${axis}" stroke-width="1.5"/>`;
+    s+=svgText('x₁',pad.l+pw/2,H-14,{anchor:'middle',color:mut,size:12.5});
+    s+=svgText('x₂',18,pad.t+ph/2,{anchor:'middle',color:mut,size:12.5,rot:-90});
+    if(poly.length>=3){
+      const pts=poly.map(p=>`${X(p[0])},${Y(p[1])}`).join(' ');
+      s+=`<polygon points="${pts}" fill="${pal(0)}" fill-opacity="0.2" stroke="${pal(0)}" stroke-opacity="0.6" stroke-width="1.5"/>`;
+    }
+    M.rows.forEach((r,i)=>{
+      const col=pal(i);let d='';
+      if(Math.abs(r.a[1])>1e-12)d=`M ${X(0)} ${Y(r.b/r.a[1])} L ${X(xm)} ${Y((r.b-r.a[0]*xm)/r.a[1])}`;
+      else d=`M ${X(r.b/r.a[0])} ${Y(0)} L ${X(r.b/r.a[0])} ${Y(ym)}`;
+      s+=`<path d="${d}" stroke="${col}" stroke-width="2.2" fill="none"/>`;
+      let lx,ly;
+      if(Math.abs(r.a[1])>1e-12){lx=X(xm*0.55);ly=Y((r.b-r.a[0]*xm*0.55)/r.a[1])-6;}
+      else{lx=X(r.b/r.a[0])+6;ly=Y(ym*0.85);}
+      s+=svgText('R'+(i+1),lx,ly,{size:11,weight:700,color:col});
+    });
+    if(opt){
+      const z=res.z;
+      [0.45,0.75,1].forEach((f,k)=>{
+        const zz=z*f,alpha=k===2?1:0.4,dash=k===2?'':'stroke-dasharray="6,5"';
+        if(Math.abs(M.c[1])>1e-12)s+=`<line x1="${X(0)}" y1="${Y(zz/M.c[1])}" x2="${X(xm)}" y2="${Y((zz-M.c[0]*xm)/M.c[1])}" stroke="${text}" stroke-opacity="${alpha}" stroke-width="${k===2?2.4:1.3}" ${dash}/>`;
+        else s+=`<line x1="${X(zz/M.c[0])}" y1="${Y(0)}" x2="${X(zz/M.c[0])}" y2="${Y(ym)}" stroke="${text}" stroke-opacity="${alpha}" stroke-width="${k===2?2.4:1.3}" ${dash}/>`;
+      });
+    }
+    V.forEach(p=>{s+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="4.5" fill="${text}"/>`;s+=svgText(`(${fmt(p[0],2)},${fmt(p[1],2)})`,X(p[0])+7,Y(p[1])-7,{size:10,color:mut});});
+    if(opt){s+=`<circle cx="${X(opt[0])}" cy="${Y(opt[1])}" r="8" fill="${css('--s2')}" stroke="${css('--card')}" stroke-width="2.5"/>`;
+      s+=svgText(`Óptimo Z=${fmt(res.z,3)}`,X(opt[0])+12,Y(opt[1])-12,{size:12,weight:700,color:css('--s2')});}
+    s+=`</svg>`;
+    document.getElementById('g').innerHTML=s;
+  });
+});}});
+
+function tableauHTML(s){
+  const cols=s.names.map((_,j)=>j).filter(j=>s.show[j]);
+  let html=`<div class="tw"><table class="t"><thead><tr><th>cB</th><th>Base</th>${cols.map(j=>`<th>${s.names[j]}<br><span class="sub">c=${fmt(s.c[j],3)}</span></th>`).join('')}<th>Sol.</th>${s.ratios?'<th>Razón</th>':''}</tr></thead><tbody>`;
+  s.A.forEach((row,i)=>{
+    html+=`<tr><td>${fmt(s.cB[i],3)}</td><td><b>${s.names[s.basis[i]]}</b></td>${cols.map(j=>`<td class="${s.leave===i&&s.enter===j?'piv':(s.enter===j?'hl':'')}">${fmt(row[j],4)}</td>`).join('')}<td>${fmt(s.b[i],4)}</td>${s.ratios?`<td class="${s.leave===i?'hl':''}">${s.ratios[i]===null?'—':fmt(s.ratios[i],4)}</td>`:''}</tr>`;});
+  html+=`<tr class="tot"><td colspan="2">zj</td>${cols.map(j=>`<td>${fmt(s.z[j],4)}</td>`).join('')}<td>${fmt(s.Z,4)}</td>${s.ratios?'<td></td>':''}</tr>
+   <tr class="tot"><td colspan="2">cj − zj</td>${cols.map(j=>`<td class="${s.enter===j?'hl':''}">${fmt(s.d[j],4)}</td>`).join('')}<td></td>${s.ratios?'<td></td>':''}</tr></tbody></table></div>`;
+  return html;
+}
+UL.tabs.push({id:'2.4',title:'2.4 Simplex tabular',render(h){wrap(h,o=>{
+  const M=lpModel(),res=lpSolve(M);
+  const hasP1=res.iters.some(s=>s.phase===1);
+  o.innerHTML=`<div class="card"><h3>Simplex tabular ${hasP1?'(dos fases)':''}</h3>
+   <p class="sub">Entra la variable con mayor c<sub>j</sub> − z<sub>j</sub>; sale la de menor razón. <span class="badge">Azul = pivote</span> <span class="badge">Amarillo = columna de entrada</span></p>
+   ${lpResultHTML(M,res)}
+   ${res.iters.length>1?`<h4>Evolución de Z</h4>${svgHost('zc')}`:''}</div>
+   <div class="card"><h3>Iteraciones</h3>${res.iters.map((s,k)=>`<details ${k<2||k===res.iters.length-1?'open':''}><summary>${s.phase===1?'Fase 1 · ':hasP1?'Fase 2 · ':''}Iteración ${res.iters.slice(0,k).filter(q=>q.phase===s.phase).length}${s.enter!==undefined&&s.leave!==undefined?` — entra ${s.names[s.enter]}, sale ${s.names[s.basis[s.leave]]}`:''}${s.note?' — '+s.note:''}</summary>${tableauHTML(s)}</details>`).join('')}</div>`;
+  const ph2=res.iters.filter(s=>s.phase===2);
+  if(ph2.length>1)reg(()=>svgLines('zc',{series:[{name:'Z',pts:ph2.map((s,i)=>[i,res.sgn*s.Z]),markers:true,color:pal(0)}],xlabel:'Iteración',ylabel:'Z',height:300,intX:true}));
+});}});
+
+UL.tabs.push({id:'2.5',title:'2.5 Sensibilidad',render(h){wrap(h,o=>{
+  const M=lpModel(),res=lpSolve(M);
+  if(res.status!=='optimal'){o.innerHTML=lpResultHTML(M,res);return;}
+  const S=lpSens(M,res);
+  if(!S){o.innerHTML=note('No fue posible calcular la sensibilidad.','warn');return;}
+  const inf=v=>v===Infinity?'+∞':v===-Infinity?'−∞':fmt(v,4);
+  o.innerHTML=`<div class="card"><h3>Solución base</h3>${lpResultHTML(M,res)}</div>
+   <div class="card"><h3>Coeficientes objetivo (c<sub>j</sub>)</h3>
+   ${tbl(['Variable','Valor','c actual','Mínimo','Máximo','Tipo'],M.c.map((c,j)=>[vn(j),fmt(res.x[j]),fmt(c),inf(S.crange[j][0]),inf(S.crange[j][1]),S.crange[j][2]]))}</div>
+   <div class="card"><h3>Recursos (b<sub>i</sub>)</h3>
+   ${tbl(['Restricción','b actual','Precio sombra','b mínimo','b máximo'],M.rows.map((r,i)=>[`R${sub(i+1)}`,fmt(r.b),fmt(S.shadow[i]),inf(S.rhs[i][0]),inf(S.rhs[i][1])]))}
+   ${svgHost('sh')}${legend([['Precio sombra',pal(0)]])}</div>`;
+  reg(()=>svgBars('sh',{labels:M.rows.map((_,i)=>'R'+(i+1)),series:[{name:'Precio sombra',values:S.shadow,color:pal(0)}],valueLabels:true,height:280,ylabel:'Δ Z por unidad'}));
+});}});
+
+UL.tabs.push({id:'2.6',title:'2.6 Software',render(h){wrap(h,o=>{
+  const M=lpModel(),n=M.c.length;
+  const lingo=`MODEL:\n${M.sense==='max'?'MAX':'MIN'} = ${M.c.map((c,j)=>`${c} * X${j+1}`).join(' + ')};\n`+M.rows.map((r,i)=>`R${i+1}: ${r.a.map((a,j)=>`${a} * X${j+1}`).join(' + ')} ${r.op==='<='?'<=':r.op==='>='?'>=':'='} ${r.b};`).join('\n')+'\nEND';
+  const sgn=M.sense==='max'?-1:1;
+  const ub=M.rows.filter(r=>r.op==='<='),lb=M.rows.filter(r=>r.op==='>='),eq=M.rows.filter(r=>r.op==='=');
+  const py=`from scipy.optimize import linprog\n\nc = [${M.c.map(v=>v*sgn).join(', ')}]\nA_ub = [${[...ub.map(r=>r.a),...lb.map(r=>r.a.map(v=>-v))].map(r=>'['+r.join(', ')+']').join(', ')}]\nb_ub = [${[...ub.map(r=>r.b),...lb.map(r=>-r.b)].join(', ')}]\n${eq.length?`A_eq = [${eq.map(r=>'['+r.a.join(', ')+']').join(', ')}]\nb_eq = [${eq.map(r=>r.b).join(', ')}]\n`:''}res = linprog(c, A_ub=A_ub, b_ub=b_ub${eq.length?', A_eq=A_eq, b_eq=b_eq':''}, bounds=[(0, None)]*${n}, method="highs")\nprint("x =", res.x)\nprint("Z =", ${M.sense==='max'?'-':''}res.fun)`;
+  o.innerHTML=`<div class="card"><h3>Uso de software para PL</h3><h4>Excel Solver</h4><ol><li>Escribe coeficientes y variables en celdas.</li><li>Objetivo = SUMAPRODUCTO(coef; vars) → ${M.sense==='max'?'Máx':'Mín'}.</li><li>Restricciones: SUMAPRODUCTO ≤/≥/= b; variables ≥ 0; Simplex LP.</li></ol></div>
+   ${codeBlock('LINGO / LINDO',lingo,'modelo.lng')}${codeBlock('Python (SciPy)',py,'modelo_lp.py')}`;
+});}});
+UNITS.push(UL);
+/* ================= UNIDAD 3 ================= */
+(function(){
+const U={id:'u3',n:3,title:'Algoritmos especiales de Programación Lineal',desc:'Problema de transporte (solución inicial + MODI) y problema de asignación (húngaro).',tabs:[]};
+const TR={m:3,n:4,sup:[120,80,100],dem:[70,60,90,80],cost:[[8,6,10,9],[9,12,13,7],[14,9,16,5]],on:['Banco 1','Banco 2','Banco 3'],dn:['Obra A','Obra B','Obra C','Obra D'],method:'vogel'};
+function trBalance(T){
+  const sup=T.sup.slice(),dem=T.dem.slice(),cost=T.cost.map(r=>r.slice()),on=T.on.slice(),dn=T.dn.slice();
+  const S=sup.reduce((a,b)=>a+b,0),D=dem.reduce((a,b)=>a+b,0);let note='';
+  if(S>D){dem.push(S-D);dn.push('Ficticio');cost.forEach(r=>r.push(0));note=`Oferta > demanda: se agrega <b>destino ficticio</b> con demanda ${S-D}.`;}
+  else if(D>S){sup.push(D-S);on.push('Ficticio');cost.push(dem.map(()=>0));note=`Demanda > oferta: se agrega <b>origen ficticio</b> con oferta ${D-S}.`;}
+  return{sup,dem,cost,on,dn,note};
+}
+function trInit(B,method){
+  const m=B.sup.length,n=B.dem.length,s=B.sup.slice(),d=B.dem.slice();
+  const x=Array.from({length:m},()=>Array(n).fill(null));
+  const R=new Set([...Array(m).keys()]),C=new Set([...Array(n).keys()]);
+  const pick=()=>{
+    if(method==='nw')return[Math.min(...R),Math.min(...C)];
+    if(method==='mc'){let best=null;R.forEach(i=>C.forEach(j=>{if(!best||B.cost[i][j]<B.cost[best[0]][best[1]])best=[i,j];}));return best;}
+    const pen=arr=>{const v=arr.slice().sort((a,b)=>a-b);return v.length>1?v[1]-v[0]:v[0];};
+    let bp=-1,kind=null,idx=-1;
+    R.forEach(i=>{const p=pen([...C].map(j=>B.cost[i][j]));if(p>bp){bp=p;kind='r';idx=i;}});
+    C.forEach(j=>{const p=pen([...R].map(i=>B.cost[i][j]));if(p>bp){bp=p;kind='c';idx=j;}});
+    if(kind==='r'){let bj=-1;C.forEach(j=>{if(bj<0||B.cost[idx][j]<B.cost[idx][bj])bj=j;});return[idx,bj];}
+    let bi=-1;R.forEach(i=>{if(bi<0||B.cost[i][idx]<B.cost[bi][idx])bi=i;});return[bi,idx];
+  };
+  while(R.size&&C.size){
+    const [i,j]=pick();const q=Math.min(s[i],d[j]);x[i][j]=q;s[i]-=q;d[j]-=q;
+    if(s[i]===0&&d[j]===0){if(R.size>1)R.delete(i);else C.delete(j);}
+    else if(s[i]===0)R.delete(i);else C.delete(j);
+  }
+  return x;
+}
+function trCost(B,x){let z=0;x.forEach((r,i)=>r.forEach((v,j)=>{if(v)z+=v*B.cost[i][j];}));return z;}
+function trLoop(x,ei,ej,m,n){
+  const basic=(i,j)=>x[i][j]!==null||(i===ei&&j===ej);
+  const path=[[ei,ej]];
+  const inP=(r,c)=>path.some(p=>p[0]===r&&p[1]===c);
+  const dfs=(i,j,horiz)=>{
+    if(horiz){for(let c=0;c<n;c++){if(c===j||!basic(i,c)||inP(i,c))continue;path.push([i,c]);if(dfs(i,c,false))return true;path.pop();}}
+    else{for(let r=0;r<m;r++){if(r===i||!basic(r,j))continue;
+        if(r===ei&&j===ej)return path.length>=3&&path.length%2===0;
+        if(inP(r,j))continue;path.push([r,j]);if(dfs(r,j,true))return true;path.pop();}}
+    return false;
+  };
+  return dfs(ei,ej,true)?path:null;
+}
+function trModi(B,x0,maxIt=100){
+  const m=B.sup.length,n=B.dem.length;const x=x0.map(r=>r.slice());const hist=[];
+  for(let it=0;it<maxIt;it++){
+    const u=Array(m).fill(null),v=Array(n).fill(null);u[0]=0;
+    const solveUV=()=>{let ch=true;while(ch){ch=false;for(let i=0;i<m;i++)for(let j=0;j<n;j++)if(x[i][j]!==null){
+      if(u[i]!==null&&v[j]===null){v[j]=B.cost[i][j]-u[i];ch=true;}else if(v[j]!==null&&u[i]===null){u[i]=B.cost[i][j]-v[j];ch=true;}}}};
+    solveUV();
+    while(u.includes(null)||v.includes(null)){
+      let done=false;
+      for(let i=0;i<m&&!done;i++)for(let j=0;j<n&&!done;j++){if(x[i][j]===null&&((u[i]!==null)!==(v[j]!==null))){x[i][j]=0;done=true;}}
+      if(!done){const i=u.indexOf(null),j=v.indexOf(null);if(i>=0)u[i]=0;else if(j>=0)v[j]=0;}
+      solveUV();
+    }
+    const red=B.cost.map((r,i)=>r.map((c,j)=>x[i][j]===null?c-u[i]-v[j]:null));
+    let mn=0,ei=-1,ej=-1,zeros=0;red.forEach((r,i)=>r.forEach((q,j)=>{if(q===null)return;if(q<mn-1e-9){mn=q;ei=i;ej=j;}if(Math.abs(q)<1e-9)zeros++;}));
+    const snap={x:x.map(r=>r.slice()),u:u.slice(),v:v.slice(),red,z:trCost(B,x),enter:ei>=0?[ei,ej]:null,loop:null,theta:0,zeros};
+    if(ei<0){hist.push(snap);return{hist,x,optimal:true};}
+    const loop=trLoop(x,ei,ej,m,n);
+    if(!loop){hist.push(snap);return{hist,x,optimal:false};}
+    snap.loop=loop;
+    let th=Infinity,lv=null;loop.forEach(([i,j],k)=>{if(k%2===1&&x[i][j]<th){th=x[i][j];lv=[i,j];}});
+    snap.theta=th;snap.leave=lv;hist.push(snap);
+    loop.forEach(([i,j],k)=>{x[i][j]=(x[i][j]||0)+(k%2===0?th:-th);});
+    x[lv[0]][lv[1]]=null;
+  }
+  return{hist,x,optimal:false};
+}
+function trTable(B,x,opt={}){
+  const m=B.sup.length,n=B.dem.length;
+  let h=`<div class="tw"><table class="t"><thead><tr><th></th>${B.dn.map(d=>`<th>${esc(d)}</th>`).join('')}<th>Oferta</th>${opt.u?'<th>u</th>':''}</tr></thead><tbody>`;
+  for(let i=0;i<m;i++){h+=`<tr><td><b>${esc(B.on[i])}</b></td>`;
+    for(let j=0;j<n;j++){const v=x[i][j];const isE=opt.enter&&opt.enter[0]===i&&opt.enter[1]===j;
+      const inLoop=opt.loop&&opt.loop.findIndex(p=>p[0]===i&&p[1]===j);
+      let cell='';
+      if(v!==null)cell=`<b>${fmt(v)}</b>`;
+      else if(opt.red&&opt.red[i][j]!==null)cell=`<span class="sub">Δ=${fmt(opt.red[i][j],3)}</span>`;
+      const sign=inLoop>=0&&opt.loop?(inLoop%2===0?' (+)':' (−)'):'';
+      h+=`<td class="${isE?'piv':v!==null&&v>0?'hl':''}"><span class="sub">c=${B.cost[i][j]}</span><br>${cell}${sign}</td>`;}
+    h+=`<td>${B.sup[i]}</td>${opt.u?`<td>${fmt(opt.u[i])}</td>`:''}</tr>`;}
+  h+=`<tr class="tot"><td>Demanda</td>${B.dem.map(d=>`<td>${d}</td>`).join('')}<td></td>${opt.u?'<td></td>':''}</tr>`;
+  if(opt.v)h+=`<tr class="tot"><td>v</td>${opt.v.map(q=>`<td>${fmt(q)}</td>`).join('')}<td></td><td></td></tr>`;
+  return h+'</tbody></table></div>';
+}
+function drawFlow(host,B,x){
+  const W=780,m=B.sup.length,n=B.dem.length,H=Math.max(280,Math.max(m,n)*60+40);
+  const px=140,qx=W-140;
+  const ys=(i,k)=>30+(H-60)*(k===1?(i+.5)/m:(i+.5)/n);
+  let mx=1;x.forEach(r=>r.forEach(v=>{if(v>mx)mx=v;}));
+  let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet"><rect width="${W}" height="${H}" fill="${css('--card')}"/>`;
+  x.forEach((r,i)=>r.forEach((v,j)=>{if(!v)return;
+    s+=`<line x1="${px+14}" y1="${ys(i,1)}" x2="${qx-14}" y2="${ys(j,2)}" stroke="${pal(i)}" stroke-opacity="0.75" stroke-width="${2+9*v/mx}"/>`;
+    const t=.3+.4*((i*7+j*3)%5)/5;const tx=px+14+(qx-px-28)*t,ty=ys(i,1)+(ys(j,2)-ys(i,1))*t;
+    const tw=String(fmt(v)).length*7+8;
+    s+=`<rect x="${tx-tw/2}" y="${ty-9}" width="${tw}" height="17" rx="3" fill="${css('--card')}"/>`;
+    s+=svgText(fmt(v),tx,ty+4,{anchor:'middle',size:12,weight:700,color:css('--text')});
+  }));
+  for(let i=0;i<m;i++){s+=`<circle cx="${px}" cy="${ys(i,1)}" r="12" fill="${pal(i)}"/>`;s+=svgText(B.on[i],px-20,ys(i,1)+4,{anchor:'end',size:12,color:css('--text')});}
+  for(let j=0;j<n;j++){s+=`<circle cx="${qx}" cy="${ys(j,2)}" r="12" fill="${css('--primary-2')}"/>`;s+=svgText(B.dn[j],qx+20,ys(j,2)+4,{size:12,color:css('--text')});}
+  s+=`</svg>`;
+  document.getElementById(host).innerHTML=s;
+}
+U.tabs.push({id:'3.1',title:'3.1 Transporte',render(h){
+  const grid=()=>{
+    $('#tg').innerHTML=`<div class="tw"><table class="t"><thead><tr><th>O \\ D</th>${TR.dn.map((d,j)=>`<th><input class="w" style="width:80px" data-dn="${j}" value="${esc(d)}"></th>`).join('')}<th>Oferta</th></tr></thead><tbody>
+     ${TR.cost.map((r,i)=>`<tr><td><input class="w" style="width:80px" data-on="${i}" value="${esc(TR.on[i])}"></td>${r.map((v,j)=>`<td><input type="number" step="any" data-c="${i},${j}" value="${v}"></td>`).join('')}<td><input type="number" data-s="${i}" value="${TR.sup[i]}"></td></tr>`).join('')}
+     <tr class="tot"><td>Demanda</td>${TR.dem.map((v,j)=>`<td><input type="number" data-d="${j}" value="${v}"></td>`).join('')}<td></td></tr></tbody></table></div>`;
+  };
+  h.innerHTML=`<div class="card"><h3>Planteamiento del problema de transporte</h3>
+   <p class="sub">Minimizar el costo de enviar unidades desde m orígenes a n destinos.</p>
+   <div class="row"><label>Orígenes <input type="number" id="tm" min="2" max="6" value="${TR.m}"></label><label>Destinos <input type="number" id="tn" min="2" max="7" value="${TR.n}"></label>
+   <button class="btn sec sm" id="tres">Aplicar</button>
+   <label>Solución inicial <select id="tmeth"><option value="nw">Esquina NO</option><option value="mc">Costo mínimo</option><option value="vogel">Vogel</option></select></label></div>
+   <div id="tg"></div><button class="btn" id="trun">Resolver</button></div><div id="tout"></div>`;
+  $('#tmeth').value=TR.method;grid();
+  $('#tg').oninput=e=>{const d=e.target.dataset,v=e.target.value;
+    if(d.dn!==undefined)TR.dn[+d.dn]=v;else if(d.on!==undefined)TR.on[+d.on]=v;
+    else if(d.c){const [i,j]=d.c.split(',').map(Number);TR.cost[i][j]=+v||0;}
+    else if(d.s!==undefined)TR.sup[+d.s]=Math.max(0,+v||0);else if(d.d!==undefined)TR.dem[+d.d]=Math.max(0,+v||0);};
+  $('#tres').onclick=()=>{const m=Math.max(2,Math.min(6,+$('#tm').value||3)),n=Math.max(2,Math.min(7,+$('#tn').value||4));
+    while(TR.on.length<m){TR.on.push('Origen '+(TR.on.length+1));TR.sup.push(50);TR.cost.push(Array(TR.n).fill(10));}TR.on.length=m;TR.sup.length=m;TR.cost.length=m;
+    while(TR.dn.length<n){TR.dn.push('Destino '+(TR.dn.length+1));TR.dem.push(50);TR.cost.forEach(r=>r.push(10));}TR.dn.length=n;TR.dem.length=n;TR.cost.forEach(r=>r.length=n);
+    TR.m=m;TR.n=n;grid();};
+  const run=()=>{
+    TR.method=$('#tmeth').value;clearCharts();
+    const B=trBalance(TR),mn={nw:'Esquina NO',mc:'Costo mínimo',vogel:'Vogel'};
+    const inits={};['nw','mc','vogel'].forEach(k=>{inits[k]=trInit(B,k);});
+    const x0=inits[TR.method],R=trModi(B,x0),last=R.hist[R.hist.length-1],zOpt=trCost(B,R.x);
+    const zs=['nw','mc','vogel'].map(k=>trCost(B,inits[k]));
+    $('#tout').innerHTML=`<div class="card"><h3>Balance</h3>${B.note?note(B.note,'warn'):note('Problema balanceado.','ok')}</div>
+     <div class="card"><h3>Solución inicial (${mn[TR.method]})</h3>${trTable(B,x0)}${kpis([[fmt(trCost(B,x0)),'Costo inicial']])}
+      <h4>Comparación</h4>${svgHost('ti')}</div>
+     <div class="card"><h3>MODI / Ruta de los signos</h3>
+      <p class="sub">Δ<sub>ij</sub> = c<sub>ij</sub> − u<sub>i</sub> − v<sub>j</sub>. Si Δ &lt; 0 entra esa celda.</p>
+      ${R.hist.map((s,k)=>`<details ${k===0||k===R.hist.length-1?'open':''}><summary>Iteración ${k} — Costo = ${fmt(s.z)}${s.enter?` · entra (${esc(B.on[s.enter[0]])}, ${esc(B.dn[s.enter[1]])}) Δ=${fmt(s.red[s.enter[0]][s.enter[1]],3)}, θ=${fmt(s.theta)}`:' · ÓPTIMA'}</summary>${trTable(B,s.x,{u:s.u,v:s.v,red:s.red,enter:s.enter,loop:s.loop})}</details>`).join('')}
+      ${R.optimal?note('Todos los Δ ≥ 0: <b>solución óptima</b>.'+(last.zeros?' Hay Δ = 0: existen <b>soluciones alternativas</b>.':''),'ok'):note('No se completó la optimización.','err')}</div>
+     <div class="card"><h3>Plan óptimo</h3>${kpis([[fmt(zOpt),'Costo total mínimo']])}
+      ${tbl(['Origen','Destino','Unidades','Costo u.','Subtotal'],R.x.flatMap((r,i)=>r.map((v,j)=>v>0?[esc(B.on[i]),esc(B.dn[j]),fmt(v),fmt(B.cost[i][j]),fmt(v*B.cost[i][j])]:null).filter(Boolean)))}
+      <div class="grid2"><div>${svgHost('tf')}</div><div>${svgHost('tc')}${legend([['Costo por iteración',pal(0)]])}</div></div></div>`;
+    reg(()=>svgBars('ti',{labels:['Esquina NO','Costo mínimo','Vogel','Óptimo MODI'],series:[{name:'Costo',values:[...zs,zOpt],color:pal(0)}],valueLabels:true,height:300,ylabel:'Costo total'}));
+    reg(()=>drawFlow('tf',B,R.x));
+    reg(()=>svgLines('tc',{series:[{name:'Costo',pts:R.hist.map((s,k)=>[k,s.z]),markers:true,color:pal(0)}],xlabel:'Iteración',ylabel:'Costo',intX:true,height:340}));
+  };
+  $('#trun').onclick=run;run();
+}});
+
+const AS={n:4,m:4,cost:[[14,5,8,7],[2,12,6,5],[7,8,3,9],[2,4,6,10]],rn:['Cuadrilla 1','Cuadrilla 2','Cuadrilla 3','Cuadrilla 4'],cn:['Obra 1','Obra 2','Obra 3','Obra 4'],mode:'min'};
+function hungarian(C0,mode){
+  const R0=C0.length,K0=C0[0].length,N=Math.max(R0,K0);let mx=-Infinity;C0.forEach(r=>r.forEach(v=>mx=Math.max(mx,v)));
+  const C=Array.from({length:N},(_,i)=>Array.from({length:N},(_,j)=>(i<R0&&j<K0)?(mode==='max'?mx-C0[i][j]:C0[i][j]):0));
+  const steps=[];const snap=(t,M,rc,cc)=>steps.push({t,M:M.map(r=>r.slice()),rc:rc||[],cc:cc||[]});
+  let M=C.map(r=>r.slice());snap('Matriz inicial',M);
+  M=M.map(r=>{const q=Math.min(...r);return r.map(v=>v-q);});snap('Reducción por filas',M);
+  for(let j=0;j<N;j++){const q=Math.min(...M.map(r=>r[j]));M.forEach(r=>r[j]-=q);}snap('Reducción por columnas',M);
+  const match=(M)=>{const mr=Array(N).fill(-1),mc=Array(N).fill(-1);
+    const tr=(i,seen)=>{for(let j=0;j<N;j++){if(Math.abs(M[i][j])<1e-9&&!seen[j]){seen[j]=true;if(mc[j]<0||tr(mc[j],seen)){mc[j]=i;mr[i]=j;return true;}}}return false;};
+    let k=0;for(let i=0;i<N;i++)if(tr(i,Array(N).fill(false)))k++;return{mr,mc,k};};
+  let guard=0;
+  for(;;){
+    const {mr,mc,k}=match(M);
+    const vr=Array(N).fill(false),vc=Array(N).fill(false);
+    const q=[];for(let i=0;i<N;i++)if(mr[i]<0){vr[i]=true;q.push(i);}
+    while(q.length){const i=q.pop();for(let j=0;j<N;j++)if(Math.abs(M[i][j])<1e-9&&!vc[j]){vc[j]=true;if(mc[j]>=0&&!vr[mc[j]]){vr[mc[j]]=true;q.push(mc[j]);}}}
+    const rc=[],cc=[];for(let i=0;i<N;i++)if(!vr[i])rc.push(i);for(let j=0;j<N;j++)if(vc[j])cc.push(j);
+    snap(`Cobertura con ${k} línea(s) ${k===N?'= n → óptimo':'< n'}`,M,rc,cc);
+    if(k===N){const asg=mr.slice();let tot=0;const pairs=[];for(let i=0;i<R0;i++){if(asg[i]<K0){pairs.push([i,asg[i]]);tot+=C0[i][asg[i]];}}return{steps,pairs,total:tot,N};}
+    let mn=Infinity;for(let i=0;i<N;i++)for(let j=0;j<N;j++)if(!rc.includes(i)&&!cc.includes(j))mn=Math.min(mn,M[i][j]);
+    for(let i=0;i<N;i++)for(let j=0;j<N;j++){const ci=rc.includes(i),cj=cc.includes(j);if(!ci&&!cj)M[i][j]-=mn;else if(ci&&cj)M[i][j]+=mn;}
+    snap(`Ajuste con menor descubierto (${fmt(mn)})`,M);
+    if(++guard>200)break;
+  }
+  return{steps,pairs:[],total:NaN,N};
+}
+U.tabs.push({id:'3.2',title:'3.2 Asignación',render(h){
+  const grid=()=>{$('#ag').innerHTML=`<div class="tw"><table class="t"><thead><tr><th></th>${AS.cn.map((d,j)=>`<th><input class="w" style="width:80px" data-cn="${j}" value="${esc(d)}"></th>`).join('')}</tr></thead><tbody>
+    ${AS.cost.map((r,i)=>`<tr><td><input class="w" style="width:90px" data-rn="${i}" value="${esc(AS.rn[i])}"></td>${r.map((v,j)=>`<td><input type="number" step="any" data-c="${i},${j}" value="${v}"></td>`).join('')}</tr>`).join('')}</tbody></table></div>`;};
+  h.innerHTML=`<div class="card"><h3>Problema de asignación</h3>
+   <p class="sub">Asignar cada agente a exactamente una tarea.</p>
+   <div class="row"><label>Agentes <input type="number" id="an" min="2" max="8" value="${AS.n}"></label><label>Tareas <input type="number" id="am" min="2" max="8" value="${AS.m}"></label><button class="btn sec sm" id="ares">Aplicar</button>
+   <label>Objetivo <select id="amode"><option value="min">Minimizar costo</option><option value="max">Maximizar beneficio</option></select></label></div>
+   <div id="ag"></div><button class="btn" id="arun">Resolver</button></div><div id="aout"></div>`;
+  $('#amode').value=AS.mode;grid();
+  $('#ag').oninput=e=>{const d=e.target.dataset,v=e.target.value;if(d.cn!==undefined)AS.cn[+d.cn]=v;else if(d.rn!==undefined)AS.rn[+d.rn]=v;else if(d.c){const [i,j]=d.c.split(',').map(Number);AS.cost[i][j]=+v||0;}};
+  $('#ares').onclick=()=>{const n=Math.max(2,Math.min(8,+$('#an').value||4)),m=Math.max(2,Math.min(8,+$('#am').value||4));
+    while(AS.rn.length<n){AS.rn.push('Agente '+(AS.rn.length+1));AS.cost.push(Array(AS.m).fill(10));}AS.rn.length=n;AS.cost.length=n;
+    while(AS.cn.length<m){AS.cn.push('Tarea '+(AS.cn.length+1));AS.cost.forEach(r=>r.push(10));}AS.cn.length=m;AS.cost.forEach(r=>r.length=m);AS.n=n;AS.m=m;grid();};
+  const run=()=>{
+    clearCharts();AS.mode=$('#amode').value;const r=hungarian(AS.cost,AS.mode);
+    const rn=i=>i<AS.rn.length?AS.rn[i]:'Ficticio',cn=j=>j<AS.cn.length?AS.cn[j]:'Ficticia';
+    $('#aout').innerHTML=`<div class="card"><h3>Resultado</h3>${kpis([[fmt(r.total),AS.mode==='max'?'Beneficio máximo':'Costo mínimo']])}
+     ${tbl(['Agente','Tarea','Valor'],r.pairs.map(([i,j])=>[esc(AS.rn[i]),esc(AS.cn[j]),fmt(AS.cost[i][j])]))}
+     ${AS.n!==AS.m?note('Matriz rectangular: se omiten asignaciones ficticias.','warn'):''}
+     ${svgHost('ac')}</div>
+     <div class="card"><h3>Pasos del húngaro</h3>${r.steps.map((s,k)=>`<details ${k===0||k===r.steps.length-1?'open':''}><summary>${esc(s.t)}</summary><div class="tw"><table class="t"><thead><tr><th></th>${s.M[0].map((_,j)=>`<th>${esc(cn(j))}</th>`).join('')}</tr></thead><tbody>${s.M.map((row,i)=>`<tr><td><b>${esc(rn(i))}</b>${s.rc.includes(i)?' ▬':''}</td>${row.map((v,j)=>{const pick=k===r.steps.length-1&&r.pairs.some(p=>p[0]===i&&p[1]===j);return`<td class="${pick?'piv':(s.rc.includes(i)||s.cc.includes(j))?'hl':''}">${fmt(v)}</td>`;}).join('')}</tr>`).join('')}</tbody></table></div></details>`).join('')}</div>`;
+    reg(()=>svgBars('ac',{labels:r.pairs.map(([i,j])=>AS.rn[i]+' → '+AS.cn[j]),series:[{name:'Valor',values:r.pairs.map(([i,j])=>AS.cost[i][j]),color:pal(0)}],valueLabels:true,height:320,ylabel:AS.mode==='max'?'Beneficio':'Costo',maxLabels:8}));
+  };
+  $('#arun').onclick=run;run();
+}});
+
+U.tabs.push({id:'3.3',title:'3.3 Software',render(h){
+  const B=trBalance(TR);
+  const py=`from scipy.optimize import linprog\nimport numpy as np\ncosto = np.array(${JSON.stringify(B.cost)})\noferta = ${JSON.stringify(B.sup)}\ndemanda = ${JSON.stringify(B.dem)}\nm, n = costo.shape\nA_eq, b_eq = [], []\nfor i in range(m):\n    fila = np.zeros((m, n)); fila[i, :] = 1\n    A_eq.append(fila.ravel()); b_eq.append(oferta[i])\nfor j in range(n):\n    col = np.zeros((m, n)); col[:, j] = 1\n    A_eq.append(col.ravel()); b_eq.append(demanda[j])\nres = linprog(costo.ravel(), A_eq=A_eq, b_eq=b_eq, bounds=(0, None), method="highs")\nprint(res.x.reshape(m, n)); print("Costo =", res.fun)`;
+  const as=`from scipy.optimize import linear_sum_assignment\nimport numpy as np\nC = np.array(${JSON.stringify(AS.cost)})\nfilas, cols = linear_sum_assignment(C${AS.mode==='max'?', maximize=True':''})\nprint(list(zip(filas, cols)), C[filas, cols].sum())`;
+  h.innerHTML=`<div class="card"><h3>Uso de software: transporte y asignación</h3><p>TORA, WinQSB, LINGO, Excel Solver, Python/SciPy.</p></div>
+   ${codeBlock('Python — transporte',py,'transporte.py')}${codeBlock('Python — asignación',as,'asignacion.py')}`;
+}});
+UNITS.push(U);
+})();
+/* ================= UNIDAD 4 ================= */
+(function(){
+const U={id:'u4',n:4,title:'Modelos de flujos en redes',desc:'Ruta más corta, flujo máximo y árbol de expansión mínima con grafo interactivo.',tabs:[]};
+const GS={
+ sp:{txt:'A B 7\nA C 9\nA F 14\nB C 10\nB D 15\nC D 11\nC F 2\nD E 6\nE F 9',s:'A',t:'E',dir:'0'},
+ mf:{txt:'S A 16\nS B 13\nA B 10\nB A 4\nA C 12\nC B 9\nB D 14\nD C 7\nC T 20\nD T 4',s:'S',t:'T'},
+ mst:{txt:'A B 4\nA C 3\nB C 5\nB D 6\nC D 8\nC E 7\nD E 2\nD F 9\nE F 10',alg:'kruskal'}
+};
+function parse(txt){
+  const edges=[],nodes=[];const seen=new Set();const errs=[];
+  txt.split('\n').forEach((ln,k)=>{ln=ln.trim();if(!ln)return;const p=ln.split(/[\s,;]+/);
+    if(p.length<3||isNaN(+p[2])){errs.push('Línea '+(k+1)+' inválida: «'+ln+'»');return;}
+    edges.push({u:p[0],v:p[1],w:+p[2]});[p[0],p[1]].forEach(x=>{if(!seen.has(x)){seen.add(x);nodes.push(x);}});});
+  return{edges,nodes,errs};
+}
+function edgesToTxt(edges){return edges.map(e=>`${e.u} ${e.v} ${e.w}`).join('\n');}
+
+// Editor con tabla editable (Origen / Destino / Peso)
+const editor=(k,extra)=>`<div class="card"><h3>Datos de la red</h3>
+  <p class="sub">Define cada arco en su propia celda: <b>Origen</b>, <b>Destino</b> y <b>Peso</b>. Puedes arrastrar los nodos en el grafo.</p>
+  <div class="tw"><table class="t" id="gtable" data-k="${k}"><thead><tr><th>Origen</th><th>Destino</th><th>Peso</th><th></th></tr></thead><tbody></tbody></table></div>
+  <div class="row"><button class="btn sec sm" id="gadd">+ Arco</button>${extra}<button class="btn" id="grun">Resolver</button></div>
+  <div id="gerr"></div></div><div id="gout"></div>`;
+
+function fillTable(k){
+  const {edges}=parse(GS[k].txt);
+  const tb=document.querySelector(`#gtable[data-k="${k}"] tbody`);if(!tb)return;
+  tb.innerHTML=edges.map((e,i)=>`<tr>
+    <td><input style="width:70px" data-i="${i}" data-f="u" value="${esc(e.u)}"></td>
+    <td><input style="width:70px" data-i="${i}" data-f="v" value="${esc(e.v)}"></td>
+    <td><input type="number" step="any" style="width:80px" data-i="${i}" data-f="w" value="${e.w}"></td>
+    <td><button class="btn sm sec" data-del="${i}">✕</button></td></tr>`).join('');
+}
+
+function readTable(k){
+  const tb=document.querySelector(`#gtable[data-k="${k}"] tbody`);if(!tb)return;
+  const rows=Array.from(tb.querySelectorAll('tr'));
+  const edges=rows.map(tr=>{const g=f=>tr.querySelector(`[data-f="${f}"]`).value;
+    return{u:g('u').trim(),v:g('v').trim(),w:parseFloat(g('w'))};}).filter(e=>e.u&&e.v&&!isNaN(e.w));
+  GS[k].txt=edgesToTxt(edges);
+}
+
+function bindTable(k,onChange){
+  const tb=document.querySelector(`#gtable[data-k="${k}"]`);
+  document.querySelector('#gadd').onclick=()=>{const t=tb.querySelector('tbody');const i=t.children.length;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><input style="width:70px" data-i="${i}" data-f="u" value=""></td>
+      <td><input style="width:70px" data-i="${i}" data-f="v" value=""></td>
+      <td><input type="number" step="any" style="width:80px" data-i="${i}" data-f="w" value="0"></td>
+      <td><button class="btn sm sec" data-del="${i}">✕</button></td>`;
+    t.appendChild(tr);onChange&&onChange();};
+  tb.addEventListener('input',()=>{readTable(k);onChange&&onChange();});
+  tb.addEventListener('click',e=>{const b=e.target.closest('[data-del]');if(!b)return;
+    const t=tb.querySelector('tbody');t.removeChild(t.children[+b.dataset.del]);readTable(k);fillTable(k);onChange&&onChange();});
+}
+
+function shortest(P,s,t,directed){
+  const adj={};P.nodes.forEach(n=>adj[n]=[]);
+  P.edges.forEach((e,k)=>{adj[e.u].push({to:e.v,w:e.w,k});if(!directed)adj[e.v].push({to:e.u,w:e.w,k});});
+  const neg=P.edges.some(e=>e.w<0);const dist={},prev={},done=new Set(),steps=[];
+  P.nodes.forEach(n=>dist[n]=Infinity);dist[s]=0;
+  if(neg){for(let i=0;i<P.nodes.length;i++)P.nodes.forEach(u=>{if(dist[u]<Infinity)adj[u].forEach(a=>{if(dist[u]+a.w<dist[a.to]-1e-12){dist[a.to]=dist[u]+a.w;prev[a.to]={u,k:a.k};}});});
+    return{dist,prev,steps,neg};}
+  while(done.size<P.nodes.length){
+    let u=null;P.nodes.forEach(n=>{if(!done.has(n)&&dist[n]<Infinity&&(u===null||dist[n]<dist[u]))u=n;});
+    if(u===null)break;done.add(u);
+    adj[u].forEach(a=>{if(!done.has(a.to)&&dist[u]+a.w<dist[a.to]-1e-12){dist[a.to]=dist[u]+a.w;prev[a.to]={u,k:a.k};}});
+    steps.push({u,labels:P.nodes.map(n=>({n,d:dist[n],f:done.has(n),p:prev[n]?prev[n].u:null}))});
+  }
+  return{dist,prev,steps,neg};
+}
+U.tabs.push({id:'4.1',title:'4.1 Camino más corto',render(h){
+  h.innerHTML=editor('sp',`<label>Origen <input style="width:60px" id="gs" value="${esc(GS.sp.s)}"></label><label>Destino <input style="width:60px" id="gd" value="${esc(GS.sp.t)}"></label><label>Tipo <select id="gdir"><option value="0">No dirigida</option><option value="1">Dirigida</option></select></label>`);
+  fillTable('sp');
+  $('#gdir').value=GS.sp.dir;
+  let gv;
+  const run=()=>{
+    clearCharts();readTable('sp');GS.sp.s=$('#gs').value.trim();GS.sp.t=$('#gd').value.trim();GS.sp.dir=$('#gdir').value;
+    const P=parse(GS.sp.txt);if(P.errs.length||!P.edges.length){$('#gout').innerHTML=note(P.errs.join('<br>')||'Sin arcos.','err');return;}
+    const s=GS.sp.s,t=GS.sp.t;if(!P.nodes.includes(s)||!P.nodes.includes(t)){$('#gout').innerHTML=note('Origen/destino no existen.','err');return;}
+    const dir=GS.sp.dir==='1',R=shortest(P,s,t,dir);
+    const path=[],pe=new Set();let c=t;if(R.dist[t]<Infinity){while(c!==s){path.unshift(c);pe.add(R.prev[c].k);c=R.prev[c].u;}path.unshift(s);}
+    $('#gout').innerHTML=`<div class="card"><h3>Resultado</h3>${R.dist[t]<Infinity?kpis([[fmt(R.dist[t]),'Distancia '+esc(s)+' → '+esc(t)],[path.length-1,'Arcos']])+note('Ruta: <b>'+path.map(esc).join(' → ')+'</b>','ok'):note('No hay ruta.','err')}
+     ${R.neg?note('Hay pesos negativos: Bellman-Ford.','warn'):''}${svgHost('gc')}
+     <h4>Distancias desde ${esc(s)}</h4>${svgHost('gb')}</div>
+     ${R.steps.length?`<div class="card"><h3>Dijkstra (etiquetado)</h3>${tbl(['Iter.','Fijado',...P.nodes.map(esc)],R.steps.map((st,k)=>[k+1,'<b>'+esc(st.u)+'</b>',...st.labels.map(l=>({h:l.d===Infinity?'∞':`[${fmt(l.d)}, ${l.p?esc(l.p):'—'}]`,c:l.f?'hl':''}))]))}</div>`:''}`;
+    gv=new GraphView('gc');const onP=new Set(path);
+    reg(()=>{gv.set(P.nodes.map(id=>({id,color:onP.has(id)?css('--s2'):undefined,fill:id===s||id===t?css('--hl'):undefined,sub:R.dist[id]<Infinity?fmt(R.dist[id]):'∞'})),
+      P.edges.map((e,k)=>({u:e.u,v:e.v,label:String(e.w),directed:dir,color:pe.has(k)?css('--s2'):undefined,width:pe.has(k)?4.5:2})));});
+    reg(()=>svgBars('gb',{labels:P.nodes,series:[{name:'d',values:P.nodes.map(n=>R.dist[n]<Infinity?R.dist[n]:0),color:pal(0)}],valueLabels:true,height:290,ylabel:'Distancia'}));
+  };
+  bindTable('sp',()=>{});
+  $('#grun').onclick=run;run();
+}});
+
+function maxflow(P,s,t){
+  const cap={};P.edges.forEach(e=>{const k=e.u+'\u0001'+e.v;cap[k]=(cap[k]||0)+e.w;});
+  const nodes=P.nodes,res={};const R=(a,b)=>res[a+'\u0001'+b]||0;
+  Object.keys(cap).forEach(k=>{const [a,b]=k.split('\u0001');res[k]=(res[k]||0)+cap[k];if(res[b+'\u0001'+a]===undefined)res[b+'\u0001'+a]=0;});
+  const iters=[];let total=0;
+  for(;;){
+    const prev={[s]:null},q=[s];
+    while(q.length&&!(t in prev)){const u=q.shift();nodes.forEach(v=>{if(!(v in prev)&&R(u,v)>1e-12){prev[v]=u;q.push(v);}});}
+    if(!(t in prev))break;
+    const path=[];let c=t;while(c!==s){path.unshift(c);c=prev[c];}path.unshift(s);
+    let b=Infinity;for(let i=0;i<path.length-1;i++)b=Math.min(b,R(path[i],path[i+1]));
+    for(let i=0;i<path.length-1;i++){res[path[i]+'\u0001'+path[i+1]]-=b;res[path[i+1]+'\u0001'+path[i]]+=b;}
+    total+=b;iters.push({path,b,total});if(iters.length>500)break;
+  }
+  const flow={};
+  Object.keys(cap).forEach(k=>{const [a,b]=k.split('\u0001');flow[k]=Math.max(0,cap[k]-R(a,b));});
+  Object.keys(cap).forEach(k=>{const [a,b]=k.split('\u0001'),r=b+'\u0001'+a;if(cap[r]!==undefined&&flow[k]>0&&flow[r]>0){const m=Math.min(flow[k],flow[r]);flow[k]-=m;flow[r]-=m;}});
+  const seen=new Set([s]),q=[s];while(q.length){const u=q.shift();nodes.forEach(v=>{if(!seen.has(v)&&R(u,v)>1e-12){seen.add(v);q.push(v);}});}
+  return{total,iters,flow,cap,S:seen};
+}
+U.tabs.push({id:'4.2',title:'4.2 Flujo máximo',render(h){
+  h.innerHTML=editor('mf',`<label>Fuente <input style="width:60px" id="gs" value="${esc(GS.mf.s)}"></label><label>Sumidero <input style="width:60px" id="gd" value="${esc(GS.mf.t)}"></label>`);
+  fillTable('mf');
+  const run=()=>{
+    clearCharts();readTable('mf');GS.mf.s=$('#gs').value.trim();GS.mf.t=$('#gd').value.trim();
+    const P=parse(GS.mf.txt);if(P.errs.length||!P.edges.length){$('#gout').innerHTML=note(P.errs.join('<br>')||'Sin arcos.','err');return;}
+    const s=GS.mf.s,t=GS.mf.t;if(!P.nodes.includes(s)||!P.nodes.includes(t)||s===t){$('#gout').innerHTML=note('Fuente/sumidero inválidos.','err');return;}
+    const F=maxflow(P,s,t);const keys=Object.keys(F.cap);
+    const cutE=keys.filter(k=>{const [a,b]=k.split('\u0001');return F.S.has(a)&&!F.S.has(b);});
+    const cutCap=cutE.reduce((a,k)=>a+F.cap[k],0);
+    $('#gout').innerHTML=`<div class="card"><h3>Resultado</h3>${kpis([[fmt(F.total),'Flujo máximo'],[F.iters.length,'Trayectorias'],[fmt(cutCap),'Corte mínimo']])}
+      ${note('Flujo máximo = corte mínimo: <b>'+fmt(F.total)+' = '+fmt(cutCap)+'</b>','ok')}
+      ${svgHost('gc')}<h4>Utilización de arcos</h4>${svgHost('gb')}${legend([['Flujo',pal(0)],['Libre',css('--grid')]])}</div>
+     <div class="card"><h3>Trayectorias de aumento</h3>${tbl(['#','Trayectoria','Flujo','Acum.'],F.iters.map((it,k)=>[k+1,{h:it.path.map(esc).join(' → '),c:'l'},fmt(it.b),fmt(it.total)]))}</div>`;
+    const gv=new GraphView('gc');
+    reg(()=>gv.set(P.nodes.map(id=>({id,color:id===s?css('--s3'):id===t?css('--s2'):undefined,fill:F.S.has(id)?css('--soft'):undefined})),
+      keys.map(k=>{const [a,b]=k.split('\u0001');const f=F.flow[k],isCut=cutE.includes(k);return{u:a,v:b,directed:true,label:fmt(f)+'/'+fmt(F.cap[k]),width:1.5+4*f/Math.max(1,...Object.values(F.flow)),color:isCut?css('--s8'):f>0?css('--s1'):css('--axis'),dash:isCut?[6,4]:null};})));
+    reg(()=>svgBars('gb',{stacked:true,labels:keys.map(k=>k.replace('\u0001','→')),series:[{name:'Flujo',values:keys.map(k=>F.flow[k]),color:pal(0)},{name:'Libre',values:keys.map(k=>F.cap[k]-F.flow[k]),color:css('--grid')}],height:300,ylabel:'Capacidad',maxLabels:14}));
+  };
+  bindTable('mf',()=>{});
+  $('#grun').onclick=run;run();
+}});
+
+function mst(P,alg){
+  const E=P.edges.map((e,k)=>({...e,k})),steps=[],tree=[];
+  if(alg==='kruskal'){
+    const par={};P.nodes.forEach(n=>par[n]=n);const f=x=>par[x]===x?x:(par[x]=f(par[x]));
+    E.slice().sort((a,b)=>a.w-b.w||a.k-b.k).forEach(e=>{const a=f(e.u),b=f(e.v);
+      if(a!==b){par[a]=b;tree.push(e);steps.push({e,ok:true,txt:'Se agrega'});}
+      else steps.push({e,ok:false,txt:'Se descarta (ciclo)'});});
+  }else{
+    const inT=new Set([P.nodes[0]]);
+    while(inT.size<P.nodes.length){let best=null;E.forEach(e=>{if(inT.has(e.u)!==inT.has(e.v)&&(!best||e.w<best.w))best=e;});
+      if(!best)break;tree.push(best);const nn=inT.has(best.u)?best.v:best.u;inT.add(nn);steps.push({e:best,ok:true,txt:'Arista mínima → agrega '+nn});}
+  }
+  return{tree,steps,total:tree.reduce((a,e)=>a+e.w,0),connected:tree.length===P.nodes.length-1};
+}
+U.tabs.push({id:'4.3',title:'4.3 Árbol de expansión mínima',render(h){
+  h.innerHTML=editor('mst',`<label>Algoritmo <select id="galg"><option value="kruskal">Kruskal</option><option value="prim">Prim</option></select></label>`);
+  fillTable('mst');
+  $('#galg').value=GS.mst.alg;
+  const run=()=>{
+    clearCharts();readTable('mst');GS.mst.alg=$('#galg').value;
+    const P=parse(GS.mst.txt);if(P.errs.length||!P.edges.length){$('#gout').innerHTML=note(P.errs.join('<br>')||'Sin arcos.','err');return;}
+    const R=mst(P,GS.mst.alg),inT=new Set(R.tree.map(e=>e.k));
+    $('#gout').innerHTML=`<div class="card"><h3>Resultado (${GS.mst.alg==='kruskal'?'Kruskal':'Prim'})</h3>${kpis([[fmt(R.total),'Peso total'],[R.tree.length,'Aristas']])}
+     ${R.connected?'':note('La red no es conexa.','warn')}${svgHost('gc')}
+     <h4>Pesos de aristas del árbol</h4>${svgHost('gb')}</div>
+     <div class="card"><h3>Paso a paso</h3>${tbl(['Paso','Arista','Peso','Decisión'],R.steps.map((s,k)=>[k+1,esc(s.e.u)+' – '+esc(s.e.v),fmt(s.e.w),{h:(s.ok?'✔ ':'✘ ')+s.txt,c:s.ok?'hl l':'l'}]))}</div>`;
+    const gv=new GraphView('gc');
+    reg(()=>gv.set(P.nodes.map(id=>({id})),P.edges.map((e,k)=>({u:e.u,v:e.v,label:String(e.w),directed:false,color:inT.has(k)?css('--s2'):css('--axis'),width:inT.has(k)?5:1.6,dash:inT.has(k)?null:[5,4]}))));
+    reg(()=>svgBars('gb',{labels:R.tree.map(e=>e.u+'–'+e.v),series:[{name:'Peso',values:R.tree.map(e=>e.w),color:pal(0)}],valueLabels:true,height:280,ylabel:'Peso'}));
+  };
+  bindTable('mst',()=>{});
+  $('#grun').onclick=run;run();
+}});
+
+U.tabs.push({id:'4.4',title:'4.4 Software',render(h){
+  const toPy=(txt)=>parse(txt).edges.map(e=>`('${e.u}', '${e.v}', ${e.w})`).join(', ');
+  const py=`import networkx as nx\n\nG = nx.${GS.sp.dir==='1'?'DiGraph':'Graph'}()\nG.add_weighted_edges_from([${toPy(GS.sp.txt)}])\nprint(nx.dijkstra_path(G, '${GS.sp.s}', '${GS.sp.t}'), nx.dijkstra_path_length(G, '${GS.sp.s}', '${GS.sp.t}'))\n\nD = nx.DiGraph()\nfor u, v, c in [${toPy(GS.mf.txt)}]:\n    D.add_edge(u, v, capacity=c)\nprint(nx.maximum_flow(D, '${GS.mf.s}', '${GS.mf.t}'))\n\nT = nx.Graph()\nT.add_weighted_edges_from([${toPy(GS.mst.txt)}])\narbol = nx.minimum_spanning_tree(T, algorithm='${GS.mst.alg}')\nprint(sorted(arbol.edges(data='weight')), arbol.size(weight='weight'))`;
+  h.innerHTML=`<div class="card"><h3>Uso de software: redes</h3><p>TORA, WinQSB, LINGO, Excel Solver, Python/NetworkX.</p></div>${codeBlock('Python — NetworkX',py,'redes.py')}`;
+}});
+UNITS.push(U);
+})();
+/* ================= UNIDAD 5 ================= */
+(function(){
+const U={id:'u5',n:5,title:'Planeación y control de proyectos de construcción',desc:'CPM/PERT, relación tiempo-costo y nivelación de recursos.',tabs:[]};
+const PRJ={rows:[
+ ['A','Trazo y nivelación','',3,2,3,5,2,3000,3800,2],['B','Excavación','A',5,4,5,8,3,10000,13000,4],['C','Cimbra','B',4,3,4,6,3,8000,9500,3],
+ ['D','Armado','B',6,5,6,8,4,12000,15000,3],['E','Colado','C D',2,2,2,3,1,6000,7500,5],['F','Muros','E',6,5,6,9,4,20000,24000,4],
+ ['G','Hidráulica','F',4,3,4,5,3,9000,10000,2],['H','Eléctrica','F',3,2,3,4,2,7000,8200,2],['I','Losa','G H',5,4,5,7,4,18000,20000,5],['J','Acabados','I',6,5,6,8,4,15000,19000,4],['K','Bardas','A',4,3,4,6,3,4000,4500,4]
+].map(a=>({id:a[0],name:a[1],pred:a[2],d:a[3],a:a[4],m:a[5],b:a[6],tc:a[7],cn:a[8],cc:a[9],r:a[10]})),ind:1500,limit:7,target:40,mode:'cpm'};
+const preds=r=>String(r.pred||'').split(/[\s,;]+/).filter(x=>x&&x!=='-');
+const COLS={
+ d:[['d','Duración','number']],
+ abm:[['a','Optimista','number'],['m','Más probable','number'],['b','Pesimista','number']],
+ crash:[['d','Dur. normal','number'],['tc','Dur. acel.','number'],['cn','Costo normal','number'],['cc','Costo acel.','number']],
+ res:[['d','Duración','number'],['r','Recurso/día','number']]
+};
+function editor(host,kind,onChange){
+  const draw=()=>{
+    const cols=COLS[kind];
+    host.innerHTML=`<div class="card"><h3>Actividades</h3><p class="sub">Predecesoras separadas por espacio o coma.</p>
+    <div class="tw"><table class="t"><thead><tr><th>Id</th><th>Descripción</th><th>Pred.</th>${cols.map(c=>`<th>${c[1]}</th>`).join('')}<th></th></tr></thead><tbody>
+    ${PRJ.rows.map((r,i)=>`<tr><td><input class="nm" data-i="${i}" data-f="id" value="${esc(r.id)}"></td><td><input class="w" style="width:100px" data-i="${i}" data-f="name" value="${esc(r.name)}"></td><td><input style="width:70px" data-i="${i}" data-f="pred" value="${esc(r.pred)}"></td>${cols.map(c=>`<td><input type="number" step="any" data-i="${i}" data-f="${c[0]}" value="${r[c[0]]}"></td>`).join('')}<td><button class="btn sm sec" data-del="${i}">✕</button></td></tr>`).join('')}</tbody></table></div>
+    <div class="row"><button class="btn sec sm" id="padd">+ Actividad</button></div></div>`;
+    host.querySelector('table').oninput=e=>{const d=e.target.dataset;if(d.i===undefined)return;const r=PRJ.rows[+d.i];
+      r[d.f]=e.target.type==='number'?(parseFloat(e.target.value)||0):e.target.value;onChange();};
+    host.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{PRJ.rows.splice(+b.dataset.del,1);draw();onChange();});
+    $('#padd',host).onclick=()=>{const c=PRJ.rows.length;PRJ.rows.push({id:String.fromCharCode(65+c%26),name:'Nueva',pred:'',d:1,a:1,m:1,b:2,tc:1,cn:0,cc:0,r:1});draw();onChange();};
+  };
+  draw();
+}
+function cpm(rows,dur){
+  const ids=rows.map(r=>r.id);if(new Set(ids).size!==ids.length)return{err:'Ids repetidos.'};
+  if(ids.some(x=>!x))return{err:'Actividades sin id.'};
+  const idx={};rows.forEach((r,i)=>idx[r.id]=i);const P=rows.map(r=>preds(r));
+  for(let i=0;i<P.length;i++)for(const p of P[i])if(!(p in idx))return{err:`Predecesora inexistente: «${p}».`};
+  const n=rows.length,indeg=P.map(p=>p.length),succ=Array.from({length:n},()=>[]);P.forEach((p,i)=>p.forEach(q=>succ[idx[q]].push(i)));
+  const order=[],q=[];indeg.forEach((d,i)=>{if(!d)q.push(i);});
+  while(q.length){const u=q.shift();order.push(u);succ[u].forEach(v=>{if(--indeg[v]===0)q.push(v);});}
+  if(order.length<n)return{err:'La red contiene un ciclo.'};
+  const D=rows.map((r,i)=>dur(r,i)),ES=Array(n).fill(0),EF=Array(n).fill(0),LS=Array(n),LF=Array(n);
+  order.forEach(u=>{ES[u]=P[u].reduce((a,p)=>Math.max(a,EF[idx[p]]),0);EF[u]=ES[u]+D[u];});
+  const T=Math.max(...EF);
+  for(let k=n-1;k>=0;k--){const u=order[k];LF[u]=succ[u].length?Math.min(...succ[u].map(v=>LS[v])):T;LS[u]=LF[u]-D[u];}
+  const slack=ES.map((_,i)=>LS[i]-ES[i]),crit=slack.map(s=>Math.abs(s)<1e-9);
+  return{n,idx,P,succ,order,D,ES,EF,LS,LF,slack,crit,T};
+}
+function critPaths(C,limit=3000){
+  const out=[];const dfs=(u,path)=>{if(out.length>limit)return;path.push(u);
+    const nx=C.succ[u].filter(v=>C.crit[v]&&Math.abs(C.EF[u]-C.ES[v])<1e-9);
+    if(!nx.length&&Math.abs(C.EF[u]-C.T)<1e-9)out.push(path.slice());else nx.forEach(v=>dfs(v,path));path.pop();};
+  C.ES.forEach((e,i)=>{if(C.crit[i]&&C.P[i].length===0&&e===0)dfs(i,[]);});return out;
+}
+function allPaths(C,limit=5000){
+  const out=[];const dfs=(u,path)=>{if(out.length>limit)return;path.push(u);if(!C.succ[u].length)out.push(path.slice());else C.succ[u].forEach(v=>dfs(v,path));path.pop();};
+  C.P.forEach((p,i)=>{if(!p.length)dfs(i,[]);});return out;
+}
+function netGraph(host,rows,C,extra){
+  const lvl=Array(C.n).fill(0);C.order.forEach(u=>{lvl[u]=C.P[u].length?1+Math.max(...C.P[u].map(p=>lvl[C.idx[p]])):0;});
+  const L=Math.max(...lvl),cols=Array.from({length:L+1},()=>[]);lvl.forEach((l,i)=>cols[l].push(i));
+  const W=Math.max(700,150+L*140),mh=Math.max(...cols.map(c=>c.length)),H=Math.max(320,mh*90+40);
+  const gv=new GraphView(host,{width:W,height:H});const pos={};
+  cols.forEach((c,l)=>c.forEach((i,k)=>{pos[rows[i].id]={x:70+l*((W-140)/Math.max(1,L)),y:H/2+(k-(c.length-1)/2)*88};}));
+  gv.pos=pos;
+  const nodes=rows.map((r,i)=>({id:r.id,w:104,h:54,lines:[r.id+(extra?' ('+extra(i)+')':' ('+fmt(C.D[i],2)+')'),`ES ${fmt(C.ES[i],2)}·EF ${fmt(C.EF[i],2)}`,`LS ${fmt(C.LS[i],2)}·LF ${fmt(C.LF[i],2)}`],color:C.crit[i]?css('--s8'):css('--primary-2'),fill:C.crit[i]?'rgba(227,73,72,.15)':css('--soft'),bw:C.crit[i]?3:2}));
+  const edges=[];rows.forEach((r,i)=>C.P[i].forEach(p=>{const j=C.idx[p];const cr=C.crit[i]&&C.crit[j]&&Math.abs(C.EF[j]-C.ES[i])<1e-9;edges.push({u:p,v:r.id,directed:true,color:cr?css('--s8'):css('--axis'),width:cr?3.4:1.8});}));
+  gv.set(nodes,edges);return gv;
+}
+function gantt(host,rows,C){
+  const W=800,H=Math.max(300,C.n*34+80);
+  const pad={l:70,r:30,t:36,b:50};
+  const pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+  const X=t=>pad.l+(t/C.T)*pw,Y=i=>pad.t+ph-(i+0.5)*(ph/C.n);
+  const text=css('--text'),grid=css('--grid'),axis=css('--axis');
+  let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet"><rect width="${W}" height="${H}" fill="${css('--card')}"/>`;
+  const xt=niceTicks(0,C.T,8).t;
+  xt.forEach(t=>{s+=`<line x1="${X(t)}" y1="${pad.t}" x2="${X(t)}" y2="${pad.t+ph}" stroke="${grid}" stroke-width="1"/>`;s+=svgText(fmt(t,1),X(t),pad.t+ph+18,{anchor:'middle',size:11,color:text});});
+  s+=`<line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t+ph}" stroke="${axis}" stroke-width="1.5"/>`;
+  s+=`<line x1="${pad.l}" y1="${pad.t+ph}" x2="${W-pad.r}" y2="${pad.t+ph}" stroke="${axis}" stroke-width="1.5"/>`;
+  rows.forEach((r,i)=>{
+    const y=Y(i);const hh=(ph/C.n)*0.56;
+    if(C.slack[i]>0)s+=`<rect x="${X(C.EF[i])}" y="${y-hh/2}" width="${X(C.LF[i])-X(C.EF[i])}" height="${hh}" fill="none" stroke="${axis}" stroke-width="1.4" stroke-dasharray="4,3"/>`;
+    s+=`<rect x="${X(C.ES[i])}" y="${y-hh/2}" width="${Math.max(2,X(C.EF[i])-X(C.ES[i]))}" height="${hh}" rx="4" fill="${C.crit[i]?css('--s8'):css('--s1')}"/>`;
+    s+=svgText(fmt(C.D[i],2),X((C.ES[i]+C.EF[i])/2),y+4,{anchor:'middle',size:11.5,weight:700,color:'#fff'});
+    s+=svgText(r.id,pad.l-10,y+4,{anchor:'end',size:12,weight:600,color:text});
+  });
+  s+=`</svg>`;
+  document.getElementById(host).innerHTML=s;
+}
+const resTable=(rows,C)=>tbl(['Act.','Descripción','Pred.','Dur.','ES','EF','LS','LF','Holgura','Crítica'],rows.map((r,i)=>[`<b>${esc(r.id)}</b>`,{h:esc(r.name),c:'l'},preds(r).join(',')||'—',fmt(C.D[i],2),fmt(C.ES[i],2),fmt(C.EF[i],2),fmt(C.LS[i],2),fmt(C.LF[i],2),{h:fmt(C.slack[i],2),c:C.crit[i]?'crit':''},C.crit[i]?'<span class="badge bad">Sí</span>':'No']));
+const L5=(h,kind,fn)=>{h.innerHTML='<div id="ed"></div><div id="out"></div>';const go=()=>{clearCharts();try{fn($('#out'))}catch(e){console.error(e);$('#out').innerHTML=note('Error: '+esc(e.message),'err')}};editor($('#ed'),kind,go);go();};
+const legGantt=legend([['Crítica',css('--s8')],['No crítica',css('--s1')],['Holgura',css('--axis'),1]]);
+
+U.tabs.push({id:'5.1',title:'5.1 Red de actividades',render(h){L5(h,'d',o=>{
+  const C=cpm(PRJ.rows,r=>+r.d||0);if(C.err){o.innerHTML=note(C.err,'err');return;}
+  const cp=critPaths(C);
+  o.innerHTML=`<div class="card"><h3>Red de actividades (AON)</h3><p class="sub">Arrastra los nodos. En rojo la ruta crítica.</p>${svgHost('net')}</div>
+   <div class="card"><h3>Cálculo adelante/atrás</h3>${kpis([[fmt(C.T,2),'Duración'],[cp.length,'Rutas críticas']])}
+    ${cp.length?note('Ruta crítica: <b>'+cp.map(p=>p.map(i=>PRJ.rows[i].id).join(' → ')).join('</b><br>Ruta crítica: <b>')+'</b>','ok'):''}${resTable(PRJ.rows,C)}</div>
+   <div class="card"><h3>Gantt</h3>${svgHost('gan')}${legGantt}</div>`;
+  reg(()=>netGraph('net',PRJ.rows,C));reg(()=>gantt('gan',PRJ.rows,C));
+});}});
+
+U.tabs.push({id:'5.2',title:'5.2 CPM y PERT',render(h){
+  h.innerHTML=`<div class="card"><h3>CPM / PERT</h3><div class="row"><label>Modo <select id="pm"><option value="cpm">CPM determinístico</option><option value="pert">PERT probabilístico (a,m,b)</option></select></label></div></div><div id="pw"></div>`;
+  $('#pm').value=PRJ.mode;
+  const mode=()=>{PRJ.mode=$('#pm').value;L5($('#pw'),PRJ.mode==='cpm'?'d':'abm',o=>{
+    const pert=PRJ.mode==='pert';
+    const te=r=>pert?(r.a+4*r.m+r.b)/6:+r.d||0,vr=r=>pert?Math.pow((r.b-r.a)/6,2):0;
+    const C=cpm(PRJ.rows,te);if(C.err){o.innerHTML=note(C.err,'err');return;}
+    let html=`<div class="card"><h3>Resultados ${pert?'PERT':'CPM'}</h3>${kpis([[fmt(C.T,2),pert?'Duración esperada μ':'Duración del proyecto']])}
+      ${pert?tbl(['Act.','a','m','b','te','σ²'],PRJ.rows.map(r=>[esc(r.id),r.a,r.m,r.b,fmt(te(r),3),fmt(vr(r),3)])):''}
+      ${resTable(PRJ.rows,C)}</div><div class="card"><h3>Gantt</h3>${svgHost('gan')}${legGantt}</div><div class="card"><h3>Red</h3>${svgHost('net')}</div>`;
+    if(pert){
+      const cps=critPaths(C);let best=null,bv=-1;cps.forEach(p=>{const v=p.reduce((a,i)=>a+vr(PRJ.rows[i]),0);if(v>bv){bv=v;best=p;}});
+      const mu=C.T,sd=Math.sqrt(Math.max(bv,1e-12));
+      html+=`<div class="card"><h3>Probabilidad de terminar a tiempo</h3><p class="sub">μ=${fmt(mu,2)}, σ²=${fmt(bv,3)}, σ=${fmt(sd,3)}</p>
+       <div class="row"><label>Plazo objetivo <input type="number" id="ptg" step="any" value="${PRJ.target}"></label></div><div id="pp"></div></div>`;
+      o.innerHTML=html;
+      const pp=()=>{PRJ.target=+$('#ptg').value||0;const z=(PRJ.target-mu)/sd,p=normCdf(z);
+        $('#pp').innerHTML=kpis([[fmt(z,3),'z = (T−μ)/σ'],[fmt(100*p,2)+' %','P(≤ '+fmt(PRJ.target,2)+')']])+svgHost('nc')+
+          tbl(['Probabilidad','z','Duración'], [['90 %','1.2816',fmt(mu+1.2816*sd,2)],['95 %','1.6449',fmt(mu+1.6449*sd,2)],['99 %','2.3263',fmt(mu+2.3263*sd,2)]]);
+        reg(()=>{
+          const k=sd>0?4*sd:1,x0=mu-k,x1=mu+k,pdf=x=>Math.exp(-Math.pow((x-mu)/sd,2)/2)/(sd*Math.sqrt(2*Math.PI)),ym=pdf(mu)*1.1;
+          const W=800,H=340,pad={l:60,r:20,t:30,b:50};
+          const pw=W-pad.l-pad.r,ph=H-pad.t-pad.b;
+          const X=x=>pad.l+(x-x0)/(x1-x0)*pw,Y=y=>pad.t+ph-(y/ym)*ph;
+          const text=css('--text'),grid=css('--grid'),mut=css('--muted');
+          let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet"><rect width="${W}" height="${H}" fill="${css('--card')}"/>`;
+          for(let i=0;i<=5;i++){const y=pad.t+ph*i/5;s+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="${grid}" stroke-width="1"/>`;}
+          for(let i=0;i<=5;i++){const xv=x0+(x1-x0)*i/5;s+=svgText(fmt(xv,1),X(xv),pad.t+ph+18,{anchor:'middle',size:11,color:mut});}
+          let area='M '+X(x0)+' '+Y(0);
+          for(let x=x0;x<=Math.min(PRJ.target,x1);x+=(x1-x0)/200)area+=' L '+X(x)+' '+Y(pdf(x));
+          area+=' L '+X(Math.min(Math.max(PRJ.target,x0),x1))+' '+Y(0)+' Z';
+          s+=`<path d="${area}" fill="${pal(0)}" fill-opacity="0.25"/>`;
+          let d='';
+          for(let x=x0;x<=x1;x+=(x1-x0)/200){d+=(d?' L ':'M ')+X(x)+' '+Y(pdf(x));}
+          s+=`<path d="${d}" fill="none" stroke="${pal(0)}" stroke-width="2.4"/>`;
+          s+=`<line x1="${X(PRJ.target)}" y1="${Y(0)}" x2="${X(PRJ.target)}" y2="${Y(ym)}" stroke="${css('--s8')}" stroke-dasharray="6,4" stroke-width="1.8"/>`;
+          s+=svgText('Plazo',X(PRJ.target)+5,Y(ym)+14,{size:12,color:css('--s8')});
+          s+=`<line x1="${pad.l}" y1="${pad.t+ph}" x2="${W-pad.r}" y2="${pad.t+ph}" stroke="${text}" stroke-width="1.5"/>`;
+          s+=`<line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t+ph}" stroke="${text}" stroke-width="1.5"/>`;
+          s+=svgText('Duración del proyecto',pad.l+pw/2,H-10,{anchor:'middle',size:12,color:mut});
+          s+=`</svg>`;
+          document.getElementById('nc').innerHTML=s;
+        });
+      };
+      $('#ptg').oninput=()=>{clearCharts();reg(()=>gantt('gan',PRJ.rows,C));reg(()=>netGraph('net',PRJ.rows,C,i=>fmt(C.D[i],2)));pp();};
+      pp();
+    }else o.innerHTML=html;
+    reg(()=>gantt('gan',PRJ.rows,C));reg(()=>netGraph('net',PRJ.rows,C));
+  });};
+  $('#pm').onchange=mode;mode();
+}});
+
+function crash(rows,ind){
+  const R=rows.map(r=>({d:Math.round(+r.d)||0,tc:Math.min(Math.round(+r.d)||0,Math.ceil(+r.tc)||0),cn:+r.cn||0,cc:+r.cc||0}));
+  const slope=R.map(r=>r.d-r.tc>0?(r.cc-r.cn)/(r.d-r.tc):Infinity);
+  const cur=R.map(r=>r.d);let direct=R.reduce((a,r)=>a+r.cn,0);
+  const steps=[];const C0=cpm(rows,(r,i)=>cur[i]);if(C0.err)return{err:C0.err};
+  const paths=allPaths(C0);
+  const pl=cur2=>paths.map(p=>p.reduce((a,i)=>a+cur2[i],0));
+  let T=Math.max(...pl(cur));
+  steps.push({T,crashed:'—',direct,indirect:T*ind,total:direct+T*ind,cost:0});
+  for(let it=0;it<500;it++){
+    const L=pl(cur),Tm=Math.max(...L),cps=paths.filter((p,k)=>L[k]===Tm);
+    const cand=[...new Set(cps.flat())].filter(i=>cur[i]>R[i].tc);
+    if(cps.some(p=>!p.some(i=>cur[i]>R[i].tc)))break;
+    let bestSet=null,bc=Infinity;
+    if(cand.length<=14){for(let mk=1;mk<(1<<cand.length);mk++){const S=cand.filter((_,b)=>mk&(1<<b));
+        if(!cps.every(p=>p.some(i=>S.includes(i))))continue;const c=S.reduce((a,i)=>a+slope[i],0);if(c<bc-1e-9){bc=c;bestSet=S;}}}
+    else{const S=[];cps.forEach(p=>{if(!p.some(i=>S.includes(i))){const c=p.filter(i=>cand.includes(i)).sort((a,b)=>slope[a]-slope[b])[0];S.push(c);}});bestSet=S;bc=S.reduce((a,i)=>a+slope[i],0);}
+    if(!bestSet)break;
+    bestSet.forEach(i=>cur[i]--);direct+=bc;T=Tm-1;
+    steps.push({T,crashed:bestSet.map(i=>rows[i].id).join(', '),direct,indirect:T*ind,total:direct+T*ind,cost:bc});
+  }
+  return{steps,slope,R,cur};
+}
+U.tabs.push({id:'5.3',title:'5.3 Tiempo-costo',render(h){L5(h,'crash',o=>{
+  const C=cpm(PRJ.rows,r=>+r.d||0);if(C.err){o.innerHTML=note(C.err,'err');return;}
+  o.innerHTML=`<div class="card"><h3>Compresión de redes</h3>
+   <p class="sub">Pendiente = (costo acel − costo normal)/(dur normal − dur acel). Cada paso acorta 1 día las rutas críticas al menor costo.</p>
+   <div class="row"><label>Costo indirecto por día <input type="number" id="pind" style="width:100px" value="${PRJ.ind}"></label></div></div><div id="r53"></div>`;
+  const calc=()=>{
+    const K=crash(PRJ.rows,PRJ.ind);if(K.err){$('#r53').innerHTML=note(K.err,'err');return;}
+    const best=K.steps.reduce((a,s)=>s.total<a.total?s:a,K.steps[0]);
+    $('#r53').innerHTML=`<div class="card">${tbl(['Act.','Dur.N','Dur.A','CN','CA','Pendiente'],PRJ.rows.map((r,i)=>[esc(r.id),K.R[i].d,K.R[i].tc,fmt(K.R[i].cn,0),fmt(K.R[i].cc,0),K.slope[i]===Infinity?'—':fmt(K.slope[i],1)]))}</div>
+   <div class="card"><h3>Resultado</h3>${kpis([[best.T+' d','Duración óptima'],['$'+fmt(best.total,0),'Costo mínimo'],[K.steps[0].T+' d','Normal']])}
+   ${svgHost('tc')}${legend([['Directo',pal(0),1],['Indirecto',pal(2),1],['Total',pal(1),1]])}
+   <h4>Pasos</h4>${tbl(['Dur.','Actividad','Costo adic.','C. directo','C. indirecto','C. total'],K.steps.map(s=>{const c=s===best?'hl':'';return[{h:s.T,c},{h:s.crashed,c},{h:s.cost?fmt(s.cost,0):'—',c},{h:fmt(s.direct,0),c},{h:fmt(s.indirect,0),c},{h:fmt(s.total,0),c}];}))}</div>`;
+    const pts=k=>K.steps.map(s=>[s.T,s[k]]);
+    reg(()=>svgLines('tc',{series:[{name:'Directo',pts:pts('direct'),color:pal(0),markers:true},{name:'Indirecto',pts:pts('indirect'),color:pal(2),markers:true},{name:'Total',pts:pts('total'),color:pal(1),markers:true}],xlabel:'Duración (días)',ylabel:'Costo',height:380,intX:true,
+      extra:({X,Y,add})=>{add(`<circle cx="${X(best.T)}" cy="${Y(best.total)}" r="8" fill="${css('--s8')}" stroke="${css('--card')}" stroke-width="2.5"/>`);add(svgText('Óptimo '+best.T+' d',X(best.T)+10,Y(best.total)-12,{size:12,weight:700,color:css('--s8')}));}}));
+  };
+  $('#pind').oninput=e=>{PRJ.ind=+e.target.value||0;clearCharts();calc();};
+  calc();
+});}});
+
+function usage(starts,rows,D,T){const u=Array(T).fill(0);rows.forEach((r,i)=>{for(let t=starts[i];t<starts[i]+D[i];t++)if(t>=0&&t<T)u[t]+=+r.r||0;});return u;}
+const ss=u=>u.reduce((a,v)=>a+v*v,0);
+U.tabs.push({id:'5.4',title:'5.4 Nivelación',render(h){L5(h,'res',o=>{
+  const C=cpm(PRJ.rows,r=>Math.round(+r.d)||0);if(C.err){o.innerHTML=note(C.err,'err');return;}
+  const rows=PRJ.rows,n=C.n,T=C.T,D=C.D;
+  const st=C.ES.slice(),before=usage(st,rows,D,T);
+  for(let pass=0;pass<60;pass++){let imp=false;
+    [...Array(n).keys()].sort((a,b)=>C.slack[b]-C.slack[a]).forEach(i=>{
+      const early=C.P[i].reduce((a,p)=>Math.max(a,st[C.idx[p]]+D[C.idx[p]]),0);
+      const late=(C.succ[i].length?Math.min(...C.succ[i].map(v=>st[v])):T)-D[i];
+      const cur=usage(st,rows,D,T);for(let t=st[i];t<st[i]+D[i];t++)cur[t]-=+rows[i].r||0;
+      let bs=st[i],bv=Infinity;for(let s=early;s<=late;s++){const u=cur.slice();for(let t=s;t<s+D[i];t++)u[t]+=+rows[i].r||0;const v=ss(u);if(v<bv-1e-9||(Math.abs(v-bv)<=1e-9&&s===st[i]))if(v<bv-1e-9||s===st[i]){bv=v;bs=s;}}
+      const now=ss(usage(st,rows,D,T));if(bv<now-1e-9){st[i]=bs;imp=true;}});
+    if(!imp)break;}
+  const after=usage(st,rows,D,T),mean=before.reduce((a,b)=>a+b,0)/T,sd=u=>Math.sqrt(u.reduce((a,v)=>a+(v-mean)*(v-mean),0)/T);
+  o.innerHTML=`<div class="card"><h3>Nivelación de recursos</h3><p class="sub">Se mantiene la duración (${T}) y las dependencias.</p>
+   <div class="row"><label>Límite de recurso <input type="number" id="plim" value="${PRJ.limit}"></label></div>
+   ${kpis([[Math.max(...before),'Pico antes'],[Math.max(...after),'Pico después'],[fmt(sd(before),2),'σ antes'],[fmt(sd(after),2),'σ después'],[fmt(mean,2),'Promedio']])}
+   <div class="grid2"><div><h4>Sin nivelar</h4>${svgHost('b1')}</div><div><h4>Nivelado</h4>${svgHost('b2')}</div></div>${legend([['Recurso/día',pal(0)],['Límite',css('--s8'),1]])}
+   <h4>Programa</h4>${tbl(['Act.','Rec./día','Inicio temp.','Inicio nivel.','Δ','Holgura'],rows.map((r,i)=>[esc(r.id),r.r,C.ES[i],{h:st[i],c:st[i]!==C.ES[i]?'hl':''},st[i]-C.ES[i],C.slack[i]]))}
+   <h4>Gantt nivelado</h4>${svgHost('gl')}</div>`;
+  const labs=Array.from({length:T},(_,i)=>i+1);
+  const ch=(id,u)=>reg(()=>svgBars(id,{labels:labs,series:[{name:'Recurso',values:u,color:pal(0)}],refLine:PRJ.limit,xlabel:'Día',ylabel:'Unidades',height:300,maxLabels:15}));
+  ch('b1',before);ch('b2',after);
+  const CL={...C,ES:st,EF:st.map((s,i)=>s+D[i]),slack:C.slack.map((s,i)=>C.LS[i]-st[i])};
+  reg(()=>gantt('gl',rows,{...CL,crit:C.crit,D}));
+  $('#plim').oninput=e=>{PRJ.limit=+e.target.value||0;redrawAll();};
+});}});
+
+U.tabs.push({id:'5.5',title:'5.5 Software',render(h){
+  const csv='ID,Nombre,Predecesoras,Duracion,Costo normal,Duracion acelerada,Costo acelerado,Recurso\n'+PRJ.rows.map(r=>[r.id,r.name,String(r.pred).replace(/[\s;]+/g,','),r.d,r.cn,r.tc,r.cc,r.r].map(v=>/,/.test(String(v))?`"${v}"`:v).join(',')).join('\n');
+  const py=`import networkx as nx\nact = {${PRJ.rows.map(r=>`'${r.id}': (${r.d}, [${preds(r).map(p=>`'${p}'`).join(', ')}])`).join(', ')}}\nG = nx.DiGraph()\nfor a,(d,pr) in act.items():\n    G.add_node(a, d=d)\n    for p in pr: G.add_edge(p, a)\nES, EF = {}, {}\nfor a in nx.topological_sort(G):\n    ES[a] = max([EF[p] for p in G.predecessors(a)], default=0)\n    EF[a] = ES[a] + act[a][0]\nT = max(EF.values()); LF, LS = {}, {}\nfor a in reversed(list(nx.topological_sort(G))):\n    LF[a] = min([LS[s] for s in G.successors(a)], default=T)\n    LS[a] = LF[a] - act[a][0]\nfor a in act: print(a, ES[a], EF[a], LS[a], LF[a])\nprint('Duración =', T)`;
+  h.innerHTML=`<div class="card"><h3>Software para proyectos</h3><ol><li><b>MS Project / Primavera P6</b>: Gantt y ruta crítica.</li><li><b>Excel</b>: CSV abajo.</li><li><b>QM / WinQSB</b>: PERT-CPM.</li></ol></div>
+  ${codeBlock('CSV actividades',csv,'proyecto.csv')}${codeBlock('Python — CPM',py,'cpm.py')}`;
+}});
+UNITS.push(U);
+})();
+/* ================= UNIDAD 6 ================= */
+(function(){
+const U={id:'u6',n:6,title:'Modelación y simulación de operaciones y procesos',desc:'Números pseudoaleatorios, Monte Carlo, líneas de espera e inventarios.',tabs:[]};
+const DIST={vals:[0,1,2,3,4],probs:[0.10,0.20,0.35,0.25,0.10],lcg:{a:1103515245,c:12345,m:2147483648,x0:7},n:500};
+function lcg(p,k){const out=[];let x=p.x0;for(let i=0;i<k;i++){x=(Number(BigInt(p.a)*BigInt(x)+BigInt(p.c))%p.m+p.m)%p.m;out.push(x/p.m);}return out;}
+U.tabs.push({id:'6.1',title:'6.1 Proceso',render(h){
+  h.innerHTML=`<div class="card"><h3>Concepto, elementos y fases</h3>
+   <p><b>Simulación</b>: técnica numérica que experimenta con un modelo del sistema.</p>
+   <div class="steps">${['Definición del sistema','Formulación del modelo','Recolección de datos','Programación','Verificación y validación','Diseño experimental','Análisis y decisión'].map((s,i)=>`<div class="step"><b>${i+1}.</b> ${s}</div>`).join('')}</div>
+   <p class="sub">Elementos: entidades, atributos, actividades, eventos, estado, reloj, variables aleatorias, generadores.</p></div>
+  <div class="card"><h3>Generador congruencial lineal: X<sub>n+1</sub> = (a·X<sub>n</sub> + c) mod m</h3>
+   <div class="row"><label>a <input type="number" id="la" style="width:110px" value="${DIST.lcg.a}"></label><label>c <input type="number" id="lc" style="width:90px" value="${DIST.lcg.c}"></label><label>m <input type="number" id="lm" style="width:110px" value="${DIST.lcg.m}"></label><label>X₀ <input type="number" id="lx" style="width:80px" value="${DIST.lcg.x0}"></label><label>N <input type="number" id="ln" min="10" max="5000" value="${DIST.n}"></label></div>
+   <div id="lout"></div></div>
+  <div class="card"><h3>Monte Carlo: variable aleatoria discreta</h3>
+   <div id="dgrid"></div><div id="dout"></div></div>`;
+  const dist=()=>{
+    $('#dgrid').innerHTML=`<div class="tw"><table class="t"><thead><tr><th>Valor</th>${DIST.vals.map((v,i)=>`<th><input type="number" data-v="${i}" value="${v}"></th>`).join('')}</tr></thead><tbody><tr><td>Probabilidad</td>${DIST.probs.map((v,i)=>`<td><input type="number" step="0.05" data-p="${i}" value="${v}"></td>`).join('')}</tr></tbody></table></div>`;
+    $('#dgrid').oninput=e=>{const d=e.target.dataset;if(d.v!==undefined)DIST.vals[+d.v]=+e.target.value;else DIST.probs[+d.p]=+e.target.value;calc();};
+  };
+  const calc=()=>{
+    clearCharts();const p={a:+$('#la').value,c:+$('#lc').value,m:+$('#lm').value,x0:+$('#lx').value};DIST.lcg=p;DIST.n=Math.max(10,Math.min(5000,+$('#ln').value||500));
+    if(!(p.m>0)){$('#lout').innerHTML=note('m debe ser positivo','err');return;}
+    const u=lcg(p,DIST.n),bins=Array(10).fill(0);u.forEach(v=>bins[Math.min(9,Math.floor(v*10))]++);
+    const mean=u.reduce((a,b)=>a+b,0)/u.length,chi=bins.reduce((a,o)=>a+Math.pow(o-u.length/10,2)/(u.length/10),0);
+    $('#lout').innerHTML=kpis([[fmt(mean,4),'Media (teórica 0.5)'],[fmt(chi,2),'χ² (crítico 16.92)'],[chi<16.92?'Uniforme ✔':'Rechaza','Prueba']])+
+      `<p class="sub">Primeros 10: ${u.slice(0,10).map(v=>fmt(v,4)).join(', ')}</p>`+svgHost('lh');
+    reg(()=>svgBars('lh',{labels:bins.map((_,i)=>(i/10).toFixed(1)+'–'+((i+1)/10).toFixed(1)),series:[{name:'Frec.',values:bins,color:pal(0)}],refLine:u.length/10,height:280,ylabel:'Frecuencia'}));
+    const sp=DIST.probs.reduce((a,b)=>a+b,0);let cum=0;
+    const rows=DIST.vals.map((v,i)=>{const lo=cum;cum+=DIST.probs[i];return{v,p:DIST.probs[i],lo,hi:cum};});
+    const cnt=DIST.vals.map(()=>0);u.forEach(r=>{const k=rows.findIndex(q=>r>=q.lo&&r<q.hi);cnt[k<0?rows.length-1:k]++;});
+    const simMean=DIST.vals.reduce((a,v,i)=>a+v*cnt[i],0)/u.length,thMean=DIST.vals.reduce((a,v,i)=>a+v*DIST.probs[i],0);
+    $('#dout').innerHTML=(Math.abs(sp-1)>1e-6?note('Las probabilidades suman '+fmt(sp,3)+'.','warn'):'')+
+      tbl(['Valor','p','Acum.','Intervalo','Frec.','p sim.'],rows.map((q,i)=>[q.v,fmt(q.p,3),fmt(q.hi,3),`[${fmt(q.lo,2)},${fmt(q.hi,2)})`,cnt[i],fmt(cnt[i]/u.length,3)]))+
+      kpis([[fmt(thMean,3),'E teórica'],[fmt(simMean,3),'Media simulada']])+svgHost('dc')+legend([['Teórica',pal(0)],['Simulada',pal(1)]]);
+    reg(()=>svgBars('dc',{labels:DIST.vals,series:[{name:'Teórica',values:DIST.probs,color:pal(0)},{name:'Simulada',values:cnt.map(c=>c/u.length),color:pal(1)}],height:300,ylabel:'Probabilidad'}));
+  };
+  $('#lout').parentElement.oninput=e=>{if(e.target.closest('#dgrid'))return;calc();};
+  dist();calc();
+}});
+
+const Q={lam:6,mu:4,c:2,n:500,seed:7};
+function simQueue(q){
+  const R=rng(q.seed),exp=(r)=>-Math.log(1-R())/r;const N=q.n;const cust=[];let t=0;const free=Array(q.c).fill(0);
+  for(let i=0;i<N;i++){const ia=exp(q.lam);t+=ia;const sv=exp(q.mu);let k=0;for(let j=1;j<q.c;j++)if(free[j]<free[k])k=j;
+    const start=Math.max(t,free[k]);free[k]=start+sv;cust.push({i:i+1,ia,arr:t,sv,start,wait:start-t,end:start+sv,srv:k+1});}
+  const ev=[];cust.forEach(c=>{ev.push([c.arr,1]);ev.push([c.start,-1]);});ev.sort((a,b)=>a[0]-b[0]||a[1]-b[1]);
+  let len=0,last=0,area=0;const prof=[[0,0]];ev.forEach(([tm,d])=>{area+=len*(tm-last);last=tm;len+=d;prof.push([tm,len]);});
+  const Tend=Math.max(...cust.map(c=>c.end));const busy=cust.reduce((a,c)=>a+c.sv,0);
+  return{cust,prof,Wq:cust.reduce((a,c)=>a+c.wait,0)/N,W:cust.reduce((a,c)=>a+c.end-c.arr,0)/N,Lq:area/last,rho:busy/(q.c*Tend),pw:cust.filter(c=>c.wait>1e-9).length/N};
+}
+function mmc(l,m,c){const a=l/m,rho=a/c;if(rho>=1)return null;let s=0,f=1;for(let k=0;k<c;k++){if(k>0)f*=k;s+=Math.pow(a,k)/f;}let fc=1;for(let k=2;k<=c;k++)fc*=k;
+  const last=Math.pow(a,c)/(fc*(1-rho)),P0=1/(s+last),Pw=last*P0,Lq=Pw*rho/(1-rho),Wq=Lq/l;return{rho,P0,Pw,Lq,Wq,W:Wq+1/m,L:Lq+a};}
+U.tabs.push({id:'6.2a',title:'6.2 Líneas de espera',render(h){
+  h.innerHTML=`<div class="card"><h3>Simulación M/M/c</h3>
+   <p class="sub">Llegadas Poisson (λ), servicio exponencial (μ), c servidores.</p>
+   <div class="row"><label>λ <input type="number" id="ql" step="any" value="${Q.lam}"></label><label>μ <input type="number" id="qm" step="any" value="${Q.mu}"></label><label>c <input type="number" id="qc" min="1" max="10" value="${Q.c}"></label><label>Clientes <input type="number" id="qn" min="10" max="5000" value="${Q.n}"></label><label>Semilla <input type="number" id="qs" value="${Q.seed}"></label><button class="btn" id="qr">Simular</button></div></div><div id="qo"></div>`;
+  const run=()=>{
+    clearCharts();Q.lam=+$('#ql').value;Q.mu=+$('#qm').value;Q.c=Math.max(1,Math.round(+$('#qc').value||1));Q.n=Math.max(10,Math.min(5000,Math.round(+$('#qn').value||200)));Q.seed=+$('#qs').value||1;
+    if(!(Q.lam>0&&Q.mu>0)){$('#qo').innerHTML=note('λ y μ deben ser positivos.','err');return;}
+    const S=simQueue(Q),T=mmc(Q.lam,Q.mu,Q.c);
+    $('#qo').innerHTML=`<div class="card"><h3>Resultados</h3>${T?'':note('ρ = λ/(cμ) ≥ 1: sistema inestable.','warn')}
+     ${tbl(['Medida','Simulación','Teoría'],[['ρ',fmt(S.rho,3),T?fmt(T.rho,3):'—'],['Wq (h)',fmt(S.Wq,3),T?fmt(T.Wq,3):'—'],['W (h)',fmt(S.W,3),T?fmt(T.W,3):'—'],['Lq',fmt(S.Lq,3),T?fmt(T.Lq,3):'—'],['P(esperar)',fmt(S.pw,3),T?fmt(T.Pw,3):'—']].map(r=>[{h:r[0],c:'l'},r[1],r[2]]))}
+     <div class="grid2"><div><h4>Espera por cliente</h4>${svgHost('qw')}</div><div><h4>Cola en el tiempo</h4>${svgHost('ql_')}</div></div>
+     <h4>Distribución de esperas</h4>${svgHost('qh')}</div>
+     <div class="card"><h3>Tabla (15 clientes)</h3>${tbl(['#','Llegada','Serv.','Inicio','Espera','Fin','Srv.'],S.cust.slice(0,15).map(c=>[c.i,fmt(c.arr,3),fmt(c.sv,3),fmt(c.start,3),fmt(c.wait,3),fmt(c.end,3),c.srv]))}</div>`;
+    reg(()=>svgBars('qw',{labels:S.cust.map(c=>c.i),series:[{name:'Espera',values:S.cust.map(c=>c.wait),color:pal(0)}],height:300,ylabel:'Horas',xlabel:'Cliente',maxLabels:8,refLine:S.Wq}));
+    reg(()=>svgLines('ql_',{series:[{name:'Cola',pts:S.prof,step:true,color:pal(1)}],height:300,xlabel:'Tiempo (h)',ylabel:'En cola'}));
+    const mx=Math.max(...S.cust.map(c=>c.wait))||1,bw=mx/10,hist=Array(10).fill(0);S.cust.forEach(c=>hist[Math.min(9,Math.floor(c.wait/bw))]++);
+    reg(()=>svgBars('qh',{labels:hist.map((_,i)=>fmt(i*bw,2)),series:[{name:'Clientes',values:hist,color:pal(2)}],height:280,ylabel:'Clientes',xlabel:'Espera (h)'}));
+  };
+  $('#qr').onclick=run;run();
+}});
+
+const INV={dem:{v:[0,1,2,3,4,5],p:[0.05,0.15,0.30,0.25,0.15,0.10]},lead:{v:[1,2,3],p:[0.3,0.5,0.2]},s:5,Q:10,I0:8,days:60,h:0.5,K:40,pen:6,seed:11};
+function sample(d,r){let c=0;for(let i=0;i<d.v.length;i++){c+=d.p[i];if(r<c)return d.v[i];}return d.v[d.v.length-1];}
+function simInv(P,s,Q){
+  const R=rng(P.seed),Rl=rng(P.seed+999);let inv=P.I0,on=[];let tot={hold:0,order:0,short:0,lost:0,dem:0,orders:0};const rows=[];
+  for(let d=1;d<=P.days;d++){
+    const arr=on.filter(o=>o.day<=d).reduce((a,o)=>a+o.q,0);on=on.filter(o=>o.day>d);inv+=arr;
+    const dm=sample(P.dem,R()),sold=Math.min(inv,dm),lost=dm-sold;inv-=sold;tot.dem+=dm;tot.lost+=lost;
+    let ordered=0;const pos=inv+on.reduce((a,o)=>a+o.q,0);
+    if(pos<=s){const L=sample(P.lead,Rl());on.push({day:d+L,q:Q});ordered=Q;tot.orders++;}
+    tot.hold+=inv*P.h;tot.short+=lost*P.pen;
+    rows.push({d,dm,arr,inv,lost,ordered});
+  }
+  tot.order=tot.orders*P.K;tot.total=tot.hold+tot.order+tot.short;tot.service=1-tot.lost/Math.max(1,tot.dem);tot.avg=rows.reduce((a,r)=>a+r.inv,0)/rows.length;
+  return{rows,tot};
+}
+U.tabs.push({id:'6.2b',title:'6.2 Inventarios',render(h){
+  const dgrid=(k,t)=>`<div class="tw"><table class="t"><thead><tr><th>${t}</th>${INV[k].v.map((v,i)=>`<th><input type="number" data-k="${k}" data-v="${i}" value="${v}"></th>`).join('')}</tr></thead><tbody><tr><td>Prob.</td>${INV[k].p.map((v,i)=>`<td><input type="number" step="0.05" data-k="${k}" data-p="${i}" value="${v}"></td>`).join('')}</tr></tbody></table></div>`;
+  h.innerHTML=`<div class="card"><h3>Simulación de inventario (s, Q)</h3>
+   <p class="sub">Cada día: llegada de pedidos pendientes, demanda Monte Carlo, y si posición ≤ s ordena Q.</p>
+   <div id="ig">${dgrid('dem','Demanda diaria')}${dgrid('lead','Tiempo de entrega')}</div>
+   <div class="row"><label>s <input type="number" id="is" value="${INV.s}"></label><label>Q <input type="number" id="iq" value="${INV.Q}"></label><label>Inv. inicial <input type="number" id="ii" value="${INV.I0}"></label><label>Días <input type="number" id="id" min="5" max="1000" value="${INV.days}"></label><label>Semilla <input type="number" id="ise" value="${INV.seed}"></label></div>
+   <div class="row"><label>Costo mantener <input type="number" id="ih" step="any" value="${INV.h}"></label><label>Costo pedir <input type="number" id="ik" value="${INV.K}"></label><label>Costo faltante <input type="number" id="ip" value="${INV.pen}"></label><button class="btn" id="ir">Simular</button></div></div><div id="io"></div>`;
+  const run=()=>{
+    clearCharts();INV.s=+$('#is').value||0;INV.Q=Math.max(1,+$('#iq').value||1);INV.I0=+$('#ii').value||0;INV.days=Math.max(5,Math.min(1000,+$('#id').value||60));INV.seed=+$('#ise').value||1;INV.h=+$('#ih').value||0;INV.K=+$('#ik').value||0;INV.pen=+$('#ip').value||0;
+    const sd=INV.dem.p.reduce((a,b)=>a+b,0),sl=INV.lead.p.reduce((a,b)=>a+b,0);
+    const S=simInv(INV,INV.s,INV.Q),md=INV.dem.v.reduce((a,v,i)=>a+v*INV.dem.p[i],0),eoq=INV.h>0?Math.sqrt(2*md*INV.K/INV.h):NaN;
+    const qs=[];for(let q=2;q<=Math.max(40,INV.Q*2);q+=2)qs.push(q);const curve=qs.map(q=>[q,simInv(INV,INV.s,q).tot.total]);const bq=curve.reduce((a,b)=>b[1]<a[1]?b:a);
+    const T=S.tot;
+    $('#io').innerHTML=`<div class="card"><h3>Resultados</h3>${Math.abs(sd-1)>1e-6||Math.abs(sl-1)>1e-6?note('Alguna distribución no suma 1.','warn'):''}
+     ${kpis([['$'+fmt(T.total,1),'Costo total'],[fmt(T.avg,2),'Inv. promedio'],[fmt(100*T.service,1)+' %','Nivel servicio'],[T.orders,'Pedidos'],[fmt(T.lost,0),'Faltantes']])}
+     ${svgHost('ic')}${legend([['Inventario',pal(0),1],['Punto reorden',css('--s8'),1]])}
+     <div class="grid2"><div><h4>Composición del costo</h4>${svgHost('ib')}</div><div><h4>Costo vs. Q</h4>${svgHost('iq_')}</div></div>
+     ${note(`Demanda media ${fmt(md,2)} u/día. EOQ = ${isNaN(eoq)?'—':fmt(eoq,1)}. Mejor Q simulado = <b>${bq[0]}</b> (${fmt(bq[1],1)}).`)}</div>
+     <div class="card"><h3>Tabla (20 días)</h3>${tbl(['Día','Dem.','Recibido','Inv.','Falt.','Pedido'],S.rows.slice(0,20).map(r=>[r.d,r.dm,r.arr||'—',r.inv,r.lost||'—',r.ordered||'—']))}</div>`;
+    reg(()=>svgLines('ic',{series:[{name:'Inventario',pts:S.rows.map(r=>[r.d,r.inv]),step:true,color:pal(0)}],xlabel:'Día',ylabel:'Unidades',height:340,ymin:0,intX:true,extra:({X,Y,add})=>{add(`<line x1="${X(1)}" y1="${Y(INV.s)}" x2="${X(INV.days)}" y2="${Y(INV.s)}" stroke="${css('--s8')}" stroke-dasharray="6,4" stroke-width="1.6"/>`);}}));
+    reg(()=>svgBars('ib',{labels:['Mantener','Pedir','Faltante'],series:[{name:'Costo',values:[T.hold,T.order,T.short],color:pal(0)}],valueLabels:true,height:300,ylabel:'Costo'}));
+    reg(()=>svgLines('iq_',{series:[{name:'Costo',pts:curve,color:pal(1),markers:true}],xlabel:'Q',ylabel:'Costo total',height:300,extra:({X,Y,add})=>{add(`<circle cx="${X(bq[0])}" cy="${Y(bq[1])}" r="7" fill="${css('--s8')}"/>`);}}));
+  };
+  $('#ig').oninput=e=>{const d=e.target.dataset;if(!d.k)return;if(d.v!==undefined)INV[d.k].v[+d.v]=+e.target.value;else INV[d.k].p[+d.p]=+e.target.value;};
+  $('#ir').onclick=run;run();
+}});
+
+U.tabs.push({id:'6.3',title:'6.3 Software',render(h){
+  const py=`import numpy as np\nrng = np.random.default_rng(${Q.seed})\nlam, mu, c, N = ${Q.lam}, ${Q.mu}, ${Q.c}, ${Q.n}\nllegada = np.cumsum(rng.exponential(1/lam, N))\nservicio = rng.exponential(1/mu, N)\nlibre = np.zeros(c); esperas = []\nfor t, s in zip(llegada, servicio):\n    k = libre.argmin(); inicio = max(t, libre[k]); libre[k] = inicio + s\n    esperas.append(inicio - t)\nprint("Espera promedio:", np.mean(esperas))`;
+  const xl=`Aleatorio:           =ALEATORIO()\nEntre llegadas:      =-LN(1-ALEATORIO())/lambda\nServicio:            =-LN(1-ALEATORIO())/mu\nDemanda discreta:    =BUSCARV(ALEATORIO(), tabla, 2, VERDADERO)`;
+  h.innerHTML=`<div class="card"><h3>Software para simulación</h3><ul><li><b>Excel</b>: Monte Carlo con ALEATORIO().</li><li><b>Arena, Simio, ProModel, FlexSim</b>: eventos discretos.</li><li><b>Crystal Ball / @RISK</b>: complementos Excel.</li><li><b>Python / R</b>: SimPy, NumPy.</li></ul></div>${codeBlock('Fórmulas Excel',xl)}${codeBlock('Python — línea de espera',py,'simulacion.py')}`;
+}});
+UNITS.push(U);
+})();
+
+/* ---------- shell ---------- */
+(function(){
+  const root=document.documentElement;
+  let saved=null;try{saved=localStorage.getItem('mor-theme')}catch(e){}
+  const initial=saved||(matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  function setTheme(t){root.setAttribute('data-theme',t);try{localStorage.setItem('mor-theme',t)}catch(e){}
+    $('#themeBtn').innerHTML=t==='dark'?'☀️ <span>Claro</span>':'🌙 <span>Oscuro</span>';redrawAll();}
+  UNITS.sort((a,b)=>a.n-b.n);
+  const side=$('#side');
+  side.innerHTML=UNITS.map(u=>`<button class="u" data-u="${u.id}"><span class="num">${u.n}</span><span class="t">${u.title}</span></button>`).join('')
+    +`<div class="footer"><b>TECNM-ITTUX</b><br>Rod Compañ 2026</div>`;
+  let cur={u:null,t:null};
+  function show(uid_,tid){
+    const u=UNITS.find(x=>x.id===uid_)||UNITS[0];
+    const t=u.tabs.find(x=>x.id===tid)||u.tabs[0];
+    cur={u:u.id,t:t.id};
+    $$('#side .u').forEach(b=>b.classList.toggle('on',b.dataset.u===u.id));
+    $('#main').innerHTML=`<div class="unithead"><div><h2>Unidad ${u.n}. ${u.title}</h2><p>${u.desc||''}</p></div>
+      <button class="btn print sm" id="printThis">🖨️ Imprimir / PDF</button></div>
+      <div class="tabs">${u.tabs.map(x=>`<button class="tab ${x.id===t.id?'on':''}" data-t="${x.id}">${x.title}</button>`).join('')}</div><div id="panel"></div>`;
+    clearCharts();
+    try{t.render($('#panel'));}catch(e){console.error(e);$('#panel').innerHTML=note('Error: '+esc(e.message),'err');}
+    side.classList.remove('open');$('#overlay').classList.remove('on');window.scrollTo(0,0);
+    $('#printThis').onclick=imprimirReporte;
+  }
+  side.addEventListener('click',e=>{const b=e.target.closest('.u');if(b){location.hash='#'+b.dataset.u;side.classList.remove('open');$('#overlay').classList.remove('on');}});
+  $('#main').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)location.hash=`#${cur.u}/${b.dataset.t}`;});
+  function route(){const [u,t]=location.hash.replace('#','').split('/');show(u,t);}
+  window.addEventListener('hashchange',route);
+  $('#themeBtn').onclick=()=>setTheme(root.getAttribute('data-theme')==='dark'?'light':'dark');
+  $('#burger').onclick=()=>{side.classList.toggle('open');$('#overlay').classList.toggle('on');};
+  $('#overlay').onclick=()=>{side.classList.remove('open');$('#overlay').classList.remove('on');};
+  $('#printBtn').onclick=imprimirReporte;
+  /* modal */
+  const modal=$('#infoModal');
+  $('#infoBtn').onclick=()=>modal.classList.add('on');
+  $('#infoClose').onclick=()=>modal.classList.remove('on');
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.remove('on');});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')modal.classList.remove('on');});
+  /* swipe para abrir sidebar en móvil */
+  let touchStartX=0,touchStartY=0;
+  document.addEventListener('touchstart',e=>{if(window.innerWidth>860)return;const t=e.touches[0];touchStartX=t.clientX;touchStartY=t.clientY;},{passive:true});
+  document.addEventListener('touchend',e=>{if(window.innerWidth>860)return;if(!e.changedTouches.length)return;
+    const t=e.changedTouches[0];const dx=t.clientX-touchStartX,dy=t.clientY-touchStartY;
+    if(touchStartX<30&&dx>60&&Math.abs(dy)<60){side.classList.add('open');$('#overlay').classList.add('on');}
+    else if(dx<-60&&Math.abs(dy)<60&&side.classList.contains('open')){side.classList.remove('open');$('#overlay').classList.remove('on');}
+  },{passive:true});
+  setTheme(initial);route();
+})();
+</script>
+</body>
+</html>
