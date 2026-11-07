@@ -82,7 +82,7 @@ No se requiere ningún entorno de compilación complejo ni instalación de libre
    https://github.com/rod-dev2026/Modelos-de-Optimizaci-n-de-Recursos
 ---
 
-## 📖 Cómo citar
+## 📖 Cómo citar en APA 7
 
 Si utilizas esta herramienta en tus actividades académicas o proyectos de investigación, por favor cítala de la siguiente manera:
  ```bash
