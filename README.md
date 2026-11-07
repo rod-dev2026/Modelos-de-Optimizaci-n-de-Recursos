@@ -81,3 +81,8 @@ No se requiere ningún entorno de compilación complejo ni instalación de libre
 1. Clona el repositorio o descarga el archivo fuente:
    ```bash
  git clone https://github.com/rod-dev2026/Modelos-de-Optimizaci-n-de-Recursos.git
+
+📖 Cómo citar
+Si utilizas esta herramienta en tus actividades académicas o proyectos de investigación, por favor cítala de la siguiente manera:
+
+Compañ Sarmiento, R. (2026). Modelos de Optimización de Recursos (Versión 4.2.2) [Herramienta didáctica y código fuente]. GitHub. https://github.com/rod-dev2026/Modelos-de-Optimizaci-n-de-Recursos
