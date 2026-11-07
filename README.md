@@ -79,8 +79,7 @@ No se requiere ningún entorno de compilación complejo ni instalación de libre
 
 1. Clona el repositorio o descarga el archivo fuente:
    ```bash
-   https://github.com/rod-dev2026/Modelos-de-Optimizaci-n-de-Recursos.git](https://github.com/rod-dev2026/Modelos-de-Optimizaci-n-de-Recursos.git
-
+   https://github.com/rod-dev2026/Modelos-de-Optimizaci-n-de-Recursos
 ---
 
 ## 📖 Cómo citar
